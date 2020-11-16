@@ -1,5 +1,6 @@
 package model.data_structures;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class Vertex<K extends Comparable<K>,V>
@@ -9,6 +10,8 @@ public class Vertex<K extends Comparable<K>,V>
 	private V value;
 	
 	private boolean marked;
+	
+	private LinkedList<Edge<K,V>> adjEdges;
 	
 	/**
 	 * Crea un vértice con identificador único y valor (información asociada), el vértice
@@ -56,7 +59,7 @@ public class Vertex<K extends Comparable<K>,V>
 	 */
 	public void addEdge( Edge<K,V> edge ) 
 	{
-		
+		adjEdges.addLast(edge);
 	}
 	
 	/**
