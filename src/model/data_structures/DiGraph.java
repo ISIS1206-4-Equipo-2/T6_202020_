@@ -1,9 +1,20 @@
 package model.data_structures;
 
+import java.util.LinkedList;
 import java.util.List;
 
 public class DiGraph <K extends Comparable<K>,V>
 {
+	 private int nV;           
+	 private int nE;                 
+	 private LinkedList<Vertex<K,V>>[] adj;    
+	 private int[] indegree;        
+	 
+	 
+	 public DiGraph(int nV) {
+		 
+	 }
+	 
 	/**
 	 * Retorna true si el vértice con id suministrado está en el grafo
 	 * @param id
