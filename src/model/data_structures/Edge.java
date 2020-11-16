@@ -16,7 +16,7 @@ public class Edge<K extends Comparable<K>, V>
 	public Edge(Vertex<K,V> source, Vertex<K,V>dest, double weight)
 	{
 		this.source = source;
-		this.dest = source;
+		this.dest = dest;
 		this.weight = weight;
 	}
 	

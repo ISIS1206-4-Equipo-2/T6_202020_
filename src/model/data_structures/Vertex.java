@@ -13,6 +13,10 @@ public class Vertex<K extends Comparable<K>,V>
 	
 	private LinkedList<Edge<K,V>> adjEdges;
 	
+	private LinkedList<Vertex<K,V>> adjVertices;
+	
+	private int indegree;
+	
 	/**
 	 * Crea un vértice con identificador único y valor (información asociada), el vértice
 	   inicia desmarcado
@@ -84,7 +88,7 @@ public class Vertex<K extends Comparable<K>,V>
 	 */
 	public int outdegree() 
 	{
-		return 0;
+		return adjEdges.size();
 	}
 	
 	/**
@@ -93,7 +97,8 @@ public class Vertex<K extends Comparable<K>,V>
 	 */
 	public int indegree()
 	{
-		return 0;
+		//Hay que modificar esto.
+		return indegree;
 	}
 	
 	/**
@@ -104,7 +109,17 @@ public class Vertex<K extends Comparable<K>,V>
 	 */
 	public Edge<K,V> getEdge(K vertex) 
 	{
-		return null;
+		Edge<K,V> resp = null;
+		
+		for (Edge<K, V> edge : adjEdges) 
+		{
+			if(edge.getDest().getId().equals(vertex))
+			{
+				resp = edge;
+				break;
+			}
+		}
+		return resp;
 	}
 	
 	/**
@@ -113,7 +128,7 @@ public class Vertex<K extends Comparable<K>,V>
 	 */
 	public List<Vertex<K,V>> vertices() 
 	{
-		return null;		
+		return adjVertices;		
 	}
 	
 	/**
@@ -122,6 +137,6 @@ public class Vertex<K extends Comparable<K>,V>
 	 */
 	public List<Edge<K,V>> edges() 
 	{
-		return null;
+		return adjEdges;
 	}
 }
