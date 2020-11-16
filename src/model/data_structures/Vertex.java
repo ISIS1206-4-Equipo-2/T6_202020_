@@ -102,6 +102,13 @@ public class Vertex<K extends Comparable<K>,V>
 	}
 	
 	/**
+	 * 
+	 */
+	public void increaseInd()
+	{
+		indegree++;
+	}
+	/**
 	 * Retorna el arco con el vértice vertex (si existe). Retorna null si no existe.
 	 * @param vertex
 	 * hoalaaa

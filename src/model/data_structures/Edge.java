@@ -17,6 +17,7 @@ public class Edge<K extends Comparable<K>, V>
 	{
 		this.source = source;
 		this.dest = dest;
+		dest.increaseInd();
 		this.weight = weight;
 	}
 	
