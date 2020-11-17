@@ -13,8 +13,6 @@ public class Vertex<K extends Comparable<K>,V>
 	
 	private LinkedList<Edge<K,V>> adjEdges;
 	
-	private LinkedList<Vertex<K,V>> adjVertices;
-	
 	private int indegree;
 	
 	/**
@@ -66,10 +64,6 @@ public class Vertex<K extends Comparable<K>,V>
 		adjEdges.add(edge);
 	}
 	
-	public void addVertex(Vertex<K, V> vertex)
-	{
-		adjVertices.add(vertex);
-	}
 	/**
 	 * Marca el vértice
 	 */
@@ -139,7 +133,12 @@ public class Vertex<K extends Comparable<K>,V>
 	 */
 	public List<Vertex<K,V>> vertices() 
 	{
-		return adjVertices;		
+		LinkedList<Vertex<K,V>> vertices = new LinkedList<>();
+		for (Edge<K, V> edge : adjEdges) 
+		{
+			vertices.addLast(edge.getDest());
+		}
+		return vertices;		
 	}
 	
 	/**

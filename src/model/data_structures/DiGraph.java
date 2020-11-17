@@ -78,7 +78,8 @@ public class DiGraph <K extends Comparable<K>,V>
 		}
 		//Si no existe el arco, lo agrega.
 		//Adentro ya se aumentó el indegree del nodo destino.
-		Edge<K,V> newEdge = new Edge<>(getVertex(source),getVertex(dest), weight);		
+		Edge<K,V> newEdge = new Edge<>(getVertex(source),getVertex(dest), weight);	
+		newEdge.getSource().addEdge(newEdge);
 		edges.add(newEdge);				    
 	}
 	
