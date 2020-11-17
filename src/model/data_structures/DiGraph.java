@@ -4,15 +4,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DiGraph <K extends Comparable<K>,V>
-{
-	 private int nV;           
-	 private int nE;                 
-	 private LinkedList<Vertex<K,V>>[] adj;    
-	 private int[] indegree;        
+{              
+	 private LinkedList<Vertex<K,V>> vertices;    
+	 private LinkedList<Edge<K,V>> edges;       
 	 
-	 
-	 public DiGraph(int nV) {
-		 
+	 // Lo cambiaremos luego a un estilo más similar a una tabla hash, pero no hay mucho tiempo de momento.
+	 public DiGraph() 
+	 {
+		 vertices = new LinkedList<>();
+	     edges = new LinkedList<>();
 	 }
 	 
 	/**
@@ -22,6 +22,14 @@ public class DiGraph <K extends Comparable<K>,V>
 	 */
 	public boolean containsVertex(K id)
 	{
+		for (Vertex<K, V> vertex : vertices) 
+		{
+			if (vertex.getId().equals(id))
+			{
+				return true;
+			}	
+		}
+		
 		return false;
 	}
 	
@@ -31,7 +39,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	 */
 	public int numVertices() 
 	{
-		return 0;
+		return vertices.size();
 	}
 	
 	/**
@@ -40,7 +48,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	 */
 	public int numEdges()
 	{
-		return 0;
+		return edges.size();
 	}
 	
 	/**
@@ -53,6 +61,25 @@ public class DiGraph <K extends Comparable<K>,V>
 	public void addEdge(K source, K dest, double weight)
 	{
 		
+		for (Edge<K, V> edge : edges) 
+		{
+			if(edge.getSource().getId().equals(source) && edge.getDest().getId().equals(dest))
+			{
+				//Cambia el peso
+				edge.setWeight(weight);
+				//Se sale del método
+				return;
+			}
+//			else if(edge.getDest().getId().equals(dest))
+//			{
+//				edge.getDest().increaseInd();	
+//				break;
+//			}
+		}
+		//Si no existe el arco, lo agrega.
+		//Adentro ya se aumentó el indegree del nodo destino.
+		Edge<K,V> newEdge = new Edge<>(getVertex(source),getVertex(dest), weight);		
+		edges.add(newEdge);				    
 	}
 	
 	/**
@@ -62,8 +89,16 @@ public class DiGraph <K extends Comparable<K>,V>
 	 */
 	public Vertex<K,V> getVertex(K id)
 	{
-		return null;
+
+		for (Vertex<K, V> vertex : vertices) 
+		{
+			if (vertex.getId().equals(id))
+			{
+				return vertex;
+			}	
+		}
 		
+		return null;	
 	}
 
 	/**
@@ -74,6 +109,14 @@ public class DiGraph <K extends Comparable<K>,V>
 	 */
 	public Edge<K,V> getEdge(K idS, K idD)
 	{
+		for (Edge<K, V> edge : edges) 
+		{
+			if(edge.getSource().getId().equals(idS) && edge.getDest().getId().equals(idD))
+			{
+				return edge;
+			}
+		}
+		
 		return null;
 	}
 	
@@ -84,7 +127,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	 */
 	public List<Edge<K,V>> adjacentEdges(K id)
 	{
-		return null;
+		return getVertex(id).edges();
 	}
 	
 	/**
@@ -92,17 +135,17 @@ public class DiGraph <K extends Comparable<K>,V>
 	 */
 	public List<Vertex<K,V>> adjacentVertex(K id)
 	{
-		return null;
+		return  getVertex(id).vertices();
 	}
 	
 	/**
 	 * Devuelve el grado de entrada del vértice vertex (número de arcos entrantes)
-	 * @param vertex
+	 * @param id
 	 * @return
 	 */
-	public int indegree(K vertex)
+	public int indegree(K id)
 	{
-		return 0;
+		return getVertex(id).indegree();
 	}
 	
 	/**
@@ -110,9 +153,9 @@ public class DiGraph <K extends Comparable<K>,V>
 	 * @param vertex
 	 * @return
 	 */
-	public int outdegree(K vertex)
+	public int outdegree(K id)
 	{
-		return 0;
+		return getVertex(id).outdegree();
 	}
 	
 	/**
@@ -121,7 +164,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	 */
 	public List<Edge<K,V>> edges()
 	{
-		return null;
+		return edges;
 	}
 	
 	/**
@@ -130,7 +173,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	 */
 	public List<Vertex<K,V>> vertices() 
 	{
-		return null;
+		return vertices;
 	}
 	
 }

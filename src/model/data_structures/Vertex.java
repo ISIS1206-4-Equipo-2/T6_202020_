@@ -63,9 +63,13 @@ public class Vertex<K extends Comparable<K>,V>
 	 */
 	public void addEdge( Edge<K,V> edge ) 
 	{
-		adjEdges.addLast(edge);
+		adjEdges.add(edge);
 	}
 	
+	public void addVertex(Vertex<K, V> vertex)
+	{
+		adjVertices.add(vertex);
+	}
 	/**
 	 * Marca el vértice
 	 */
@@ -97,7 +101,7 @@ public class Vertex<K extends Comparable<K>,V>
 	 */
 	public int indegree()
 	{
-		//Hay que modificar esto.
+		//Hay que modificar esto. o no)?
 		return indegree;
 	}
 	
