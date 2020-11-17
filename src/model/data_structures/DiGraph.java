@@ -60,6 +60,15 @@ public class DiGraph <K extends Comparable<K>,V>
 	 */
 	public void addEdge(K source, K dest, double weight)
 	{
+		Vertex<K,V> vSource = getVertex(source);
+		Vertex<K,V> vDest = getVertex(dest);
+				
+		if(vSource == null || vDest == null)
+		{
+			throw new IllegalArgumentException("Uno de los vértices no existe."); 
+		}
+		
+		Edge<K,V> newEdge = new Edge<>(vSource,vDest, weight);	
 		
 		for (Edge<K, V> edge : edges) 
 		{
@@ -70,15 +79,11 @@ public class DiGraph <K extends Comparable<K>,V>
 				//Se sale del método
 				return;
 			}
-//			else if(edge.getDest().getId().equals(dest))
-//			{
-//				edge.getDest().increaseInd();	
-//				break;
-//			}
 		}
 		//Si no existe el arco, lo agrega.
 		//Adentro ya se aumentó el indegree del nodo destino.
-		Edge<K,V> newEdge = new Edge<>(getVertex(source),getVertex(dest), weight);	
+		
+		vDest.increaseInd();
 		newEdge.getSource().addEdge(newEdge);
 		edges.add(newEdge);				    
 	}
@@ -90,7 +95,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	 */
 	public Vertex<K,V> getVertex(K id)
 	{
-
+		
 		for (Vertex<K, V> vertex : vertices) 
 		{
 			if (vertex.getId().equals(id))
