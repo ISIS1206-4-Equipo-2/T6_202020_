@@ -8,7 +8,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	 private LinkedList<Vertex<K,V>> vertices;    
 	 private LinkedList<Edge<K,V>> edges;       
 	 
-	 // Lo cambiaremos luego a un estilo más similar a una tabla hash, pero no hay mucho tiempo de momento.
+	 // Lo cambiaremos luego para usar una tabla hash, pero no hay mucho tiempo de momento.
 	 public DiGraph() 
 	 {
 		 vertices = new LinkedList<>();
@@ -16,7 +16,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	 }
 	 
 	/**
-	 * Retorna true si el vértice con id suministrado está en el grafo
+	 * Retorna true si el vertice con id suministrado esta en el grafo
 	 * @param id
 	 * @return
 	 */
@@ -34,7 +34,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	}
 	
 	/**
-	 * Devuelve el número de vértices en el grafo
+	 * Devuelve el numero de vertices en el grafo
 	 * @return
 	 */
 	public int numVertices() 
@@ -43,16 +43,25 @@ public class DiGraph <K extends Comparable<K>,V>
 	}
 	
 	/**
-	 * Devuelve el número de arcos en el grafo
+	 * Devuelve el numero de arcos en el grafo
 	 * @return
 	 */
 	public int numEdges()
 	{
 		return edges.size();
 	}
-	
+
 	/**
-	 * Añade un arco dirigido pesado entre el vértice source y dest, con peso weight. Si el
+	 * Agrega un nuevo vertice a la lista de vertices
+	 * @param el id del vertice y su valor
+	 */
+	public void insertVertex(K id, V value){
+		Vertex<K,V> vertice = new Vertex<>(id, value);
+		vertices.add(vertice);
+	}
+
+	/**
+	 * Aï¿½ade un arco dirigido pesado entre el vertice source y dest, con peso weight. Si el
 	   arco YA existe se modifica su peso.
 	 * @param source
 	 * @param dest
@@ -65,7 +74,7 @@ public class DiGraph <K extends Comparable<K>,V>
 				
 		if(vSource == null || vDest == null)
 		{
-			throw new IllegalArgumentException("Uno de los vértices no existe."); 
+			throw new IllegalArgumentException("Uno de los vertices no existe."); 
 		}
 		
 
@@ -75,7 +84,7 @@ public class DiGraph <K extends Comparable<K>,V>
 			{
 				//Cambia el peso
 				edge.setWeight(weight);
-				//Se sale del método
+				//Se sale del metodo
 				return;
 			}
 		}
@@ -83,13 +92,13 @@ public class DiGraph <K extends Comparable<K>,V>
 		//Si no existe el arco, lo agrega como uno nuevo.
 		Edge<K,V> newEdge = new Edge<>(vSource,vDest, weight);	
 		//Aumenda el indegree del nodo destino
-		vDest.increaseInd();
-		newEdge.getSource().addEdge(newEdge);
+		vSource.addEdge(newEdge);
+		vDest.addEdge(newEdge);
 		edges.add(newEdge);				    
 	}
-	
+
 	/**
-	 * Retorna el vértice a partir de su identificador único
+	 * Retorna el vertice a partir de su identificador unico
 	 * @param id
 	 * @return
 	 */
@@ -108,7 +117,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	}
 
 	/**
-	 * Retorna el arco entre los vértices idS y idD (si existe). Retorna null si no existe.
+	 * Retorna el arco entre los vï¿½rtices idS y idD (si existe). Retorna null si no existe.
 	 * @param idS
 	 * @param idD
 	 * @return
@@ -127,7 +136,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	}
 	
 	/**
-	 * Devuelve una lista de arcos adyacentes (salientes) al vértice con id
+	 * Devuelve una lista de arcos adyacentes (salientes) al vï¿½rtice con id
 	 * @param id
 	 * @return
 	 */
@@ -137,7 +146,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	}
 	
 	/**
-	 * Devuelve una lista de vértices adyacentes (salientes) al vértice con id
+	 * Devuelve una lista de vï¿½rtices adyacentes (salientes) al vï¿½rtice con id
 	 */
 	public List<Vertex<K,V>> adjacentVertex(K id)
 	{
@@ -145,7 +154,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	}
 	
 	/**
-	 * Devuelve el grado de entrada del vértice vertex (número de arcos entrantes)
+	 * Devuelve el grado de entrada del vï¿½rtice vertex (nï¿½mero de arcos entrantes)
 	 * @param id
 	 * @return
 	 */
@@ -155,7 +164,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	}
 	
 	/**
-	 * Devuelve el grado de salida del vértice vertex (número de arcos salientes)
+	 * Devuelve el grado de salida del vï¿½rtice vertex (nï¿½mero de arcos salientes)
 	 * @param vertex
 	 * @return
 	 */
@@ -174,7 +183,7 @@ public class DiGraph <K extends Comparable<K>,V>
 	}
 	
 	/**
-	 * Devuelve una lista con los vértices del grafo
+	 * Devuelve una lista con los vï¿½rtices del grafo
 	 * @return
 	 */
 	public List<Vertex<K,V>> vertices() 
