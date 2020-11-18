@@ -25,7 +25,6 @@ public class test_Digraph {
         digrafo.addEdge(1, 3, 1);        
         digrafo.addEdge(3, 1, 1);
         digrafo.addEdge(3, 4, 1);
-        digrafo.addEdge(4, 4, 1);                        
     }
 
     /**
@@ -36,7 +35,7 @@ public class test_Digraph {
     public void testNumVertEdge(){
         setUp();
         assertEquals(4, digrafo.numVertices());
-        assertEquals(6, digrafo.numEdges());
+        assertEquals(5, digrafo.numEdges());
     }
 
     @Test
