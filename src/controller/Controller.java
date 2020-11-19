@@ -57,6 +57,7 @@ public class Controller {
 					try {
 						int id = Integer.parseInt(lector.nextLine());
 						view.printMessage(modelo.darGradosPorID(id));
+						view.printMessage("----------------------------------");
 					} catch (Exception e) {
 						view.printMessage("No se pudieron obtener los grados de entrada y salida");
 						view.printMessage(e.getMessage());

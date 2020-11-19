@@ -119,6 +119,6 @@ public class Modelo {
     }
 
     public String darGradosPorID(int pID) {
-        return "Grado de entrada: " + grafo.indegree(pID) + "\nGrado de salida: " + grafo.outdegree(pID);
+        return "Grado de entrada: " + grafo.outdegree(pID) + "\nGrado de salida: " + grafo.indegree(pID);
     }
 }
