@@ -147,4 +147,6 @@ public class Vertex<K extends Comparable<K>, V> {
 	public List<Edge<K, V>> edges() {
 		return edges;
 	}
+	
+	
 }

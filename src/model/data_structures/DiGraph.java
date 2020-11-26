@@ -4,13 +4,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class DiGraph<K extends Comparable<K>, V> {
-	private LinkedList<Vertex<K, V>> vertices;
+	private TablaHashSeparateChaining<K, Vertex<K, V>> vertices;
 	private LinkedList<Edge<K, V>> edges;
 
 	// Lo cambiaremos luego para usar una tabla hash, pero no hay mucho tiempo de
 	// momento.
 	public DiGraph() {
-		vertices = new LinkedList<Vertex<K, V>>();
+		vertices = new TablaHashSeparateChaining<K,Vertex<K, V>>();
 		edges = new LinkedList<Edge<K, V>>();
 	}
 
@@ -20,14 +20,9 @@ public class DiGraph<K extends Comparable<K>, V> {
 	 * @param id
 	 * @return
 	 */
-	public boolean containsVertex(K id) {
-		for (Vertex<K, V> vertex : vertices) {
-			if (vertex.getId().equals(id)) {
-				return true;
-			}
-		}
-
-		return false;
+	public boolean containsVertex(K id) 
+	{
+		return vertices.contains(id);	
 	}
 
 	/**
@@ -53,9 +48,10 @@ public class DiGraph<K extends Comparable<K>, V> {
 	 * 
 	 * @param el id del vertice y su valor
 	 */
-	public void insertVertex(K id, V value) {
+	public void insertVertex(K id, V value) 
+	{
 		Vertex<K, V> vertice = new Vertex<>(id, value);
-		vertices.add(vertice);
+		vertices.put(id, vertice);
 	}
 
 	/**
@@ -97,15 +93,9 @@ public class DiGraph<K extends Comparable<K>, V> {
 	 * @param id
 	 * @return
 	 */
-	public Vertex<K, V> getVertex(K id) {
-
-		for (Vertex<K, V> vertex : vertices) {
-			if (vertex.getId().equals(id)) {
-				return vertex;
-			}
-		}
-
-		return null;
+	public Vertex<K, V> getVertex(K id) 
+	{
+		return vertices.get(id);
 	}
 
 	/**
@@ -177,8 +167,19 @@ public class DiGraph<K extends Comparable<K>, V> {
 	 * 
 	 * @return
 	 */
-	public List<Vertex<K, V>> vertices() {
-		return vertices;
+	public List<Vertex<K, V>> vertices() 
+	{
+		Object array[] = vertices.valueSet();
+		Vertex<K, V>  array2[] = (Vertex<K, V>[]) new Object[array.length];
+		
+		LinkedList<Vertex<K, V>> list = new LinkedList<>();
+		
+		for (Vertex<K, V> vertex : array) 
+		{
+			list.addLast(vertex);
+		}
+				
+		return list;
 	}
 
 }
