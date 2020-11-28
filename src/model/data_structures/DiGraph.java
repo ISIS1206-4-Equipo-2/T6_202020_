@@ -167,16 +167,17 @@ public class DiGraph<K extends Comparable<K>, V> {
 	 * 
 	 * @return
 	 */
+	@SuppressWarnings("unchecked")
 	public List<Vertex<K, V>> vertices() 
 	{
 		Object array[] = vertices.valueSet();
-		Vertex<K, V>  array2[] = (Vertex<K, V>[]) new Object[array.length];
+		//Vertex<K, V>  array2[] = (Vertex<K, V>[]) new Object[array.length];
 		
 		LinkedList<Vertex<K, V>> list = new LinkedList<>();
 		
-		for (Vertex<K, V> vertex : array) 
+		for (Object vertex : array) 
 		{
-			list.addLast(vertex);
+			list.addLast((Vertex<K, V>) vertex);
 		}
 				
 		return list;
