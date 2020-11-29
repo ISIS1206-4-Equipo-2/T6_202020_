@@ -64,11 +64,11 @@ public class Vertex<K extends Comparable<K>, V> {
 		if (edge.getSource().getId().equals(this.id) && edge.getSource().getInfo().equals(this.value)) {
 			if (!edges.contains(edge)) {
 				edges.add(edge);
-				indegree++;
+				outdegree++;
 			}
 		} else if (edge.getDest().getId().equals(this.id) && edge.getDest().getInfo().equals(this.value)) {
 			if (!edges.contains(edge)) {
-				outdegree++;
+				indegree++;
 			}
 		} else {
 			System.out.println("ERROR: No se agrego el edge");
