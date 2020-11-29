@@ -105,8 +105,8 @@ public class Modelo {
             if(grafo.containsVertex(finID) && grafo.containsVertex(iniID))
             {
             	//System.out.println(edad);
-            	grafo.getVertex(iniID).getInfo().aumentarRangoEdad(edad);
-            	grafo.getVertex(finID).getInfo().aumentarRangoEdad(edad);
+            	grafo.getVertex(iniID).getInfo().aumentarRangoEdadS(edad);
+            	grafo.getVertex(finID).getInfo().aumentarRangoEdadE(edad);
             	//System.out.println(grafo.getVertex(iniID).getInfo().cantidadEnRangoEdad(edad));
             }
             
@@ -270,23 +270,46 @@ public class Modelo {
     	
     }
     
-    public Estacion estacionConMasViajerosPorEdad(int edad)
+    /**
+     * Retorna una tupla con dos estaciones, la primera es la que más salidas por la edad tiene, 
+     * la segunda es la que mas entradas por edad tiene.
+     * @param edad
+     * @return
+     */
+    public Estacion[] estacionConMasViajerosPorEdad(int edad)
     {
     	List<Vertex<Integer, Estacion>>  lista = grafo.vertices();
     	
-    	int mayor = 0;
-    	Estacion bigger = null;
+    	Estacion[] resp = {null, null};
     	
+    	int mayorS = 0;
+    	Estacion biggerS = null;
+    	
+    	int mayorE = 0;
+    	Estacion biggerE = null;
+    	
+    
     	for (Vertex<Integer, Estacion> vertex : lista) 
     	{
-			int actual = vertex.getInfo().cantidadEnRangoEdad(edad);
-			if(actual > mayor)
+			int actualS = vertex.getInfo().cantidadEnRangoEdadS(edad);
+			int actualE = vertex.getInfo().cantidadEnRangoEdadE(edad);
+			
+			if(actualS > mayorS)
 			{
-				mayor = actual;
-				bigger = vertex.getInfo();
+				mayorS = actualS;
+				biggerS = vertex.getInfo();
+			}
+			
+			if(actualE > mayorE)
+			{
+				mayorE = actualE;
+				biggerE = vertex.getInfo();
 			}
 		}
     	
-    	return bigger;
+    	resp[0] = biggerS;
+    	resp[1] = biggerE;
+    	
+    	return resp;
     }
 }

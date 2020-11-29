@@ -93,9 +93,10 @@ public class Controller {
 						view.printMessage("----------------------------------");
 						
 						int edad = Integer.parseInt(lector.nextLine());
-						Estacion masViajes = modelo.estacionConMasViajerosPorEdad(edad);
-						view.printMessage(masViajes.darNombre());
-						view.printMessage(""+masViajes.cantidadEnRangoEdad(edad));
+						Estacion[] masViajes = modelo.estacionConMasViajerosPorEdad(edad);
+						
+						view.printMessage("Mas por salida: " + masViajes[0].darNombre() + " con " + " " +masViajes[0].cantidadEnRangoEdadS(edad) +" salidas.");
+						view.printMessage("Mas por entrada: " + masViajes[1].darNombre() + " con " + " " +masViajes[1].cantidadEnRangoEdadE(edad) +" entradas.");
 							
 					} 
 					catch (Exception e) 

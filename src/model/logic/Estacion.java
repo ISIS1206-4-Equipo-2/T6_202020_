@@ -7,12 +7,17 @@ import model.data_structures.Edge;
 public class Estacion {
 
     private String nombre;
-    private int[] edadesCantidad;
+    private int[] edadesCantidadSalida;
+    private int[] edadesCantidadEntrada;
     
     public Estacion(String pNombre)
     {
-    	edadesCantidad = new int[7];
-    	for (int i : edadesCantidad) {
+    	edadesCantidadSalida = new int[7];
+    	for (int i : edadesCantidadSalida) {
+			i = 0;
+		}
+    	edadesCantidadEntrada = new int[7];
+    	for (int i : edadesCantidadEntrada) {
 			i = 0;
 		}
         nombre=pNombre;
@@ -22,68 +27,135 @@ public class Estacion {
 		return nombre;
 	}
 	
-	public void aumentarRangoEdad(int edad)
+	public void aumentarRangoEdadS(int edad)
 	{
 		if(edad >= 0 && edad <= 10)
 		{
 			
-			edadesCantidad[0] = edadesCantidad[0]+1;
+			edadesCantidadSalida[0] = edadesCantidadSalida[0]+1;
 		}
 		else if(edad >= 11 && edad <= 20)
 		{
-			edadesCantidad[1] = edadesCantidad[1]+1;
+			edadesCantidadSalida[1] = edadesCantidadSalida[1]+1;
 		}
 		else if(edad >= 21 && edad <= 30)
 		{	
-			edadesCantidad[2] = edadesCantidad[2]+1;
+			edadesCantidadSalida[2] = edadesCantidadSalida[2]+1;
 		}
 		else if(edad >= 31 && edad <= 40)
 		{
-			edadesCantidad[3] = edadesCantidad[3]+1;
+			edadesCantidadSalida[3] = edadesCantidadSalida[3]+1;
 		}
 		else if(edad >= 41 && edad <= 50)
 		{
-			edadesCantidad[4] = edadesCantidad[4]+1;
+			edadesCantidadSalida[4] = edadesCantidadSalida[4]+1;
 		}
 		else if(edad >= 51 && edad <= 60)
 		{
-			edadesCantidad[5] = edadesCantidad[5]+1;
+			edadesCantidadSalida[5] = edadesCantidadSalida[5]+1;
 		}
 		else if(edad >= 61)
 		{
-			edadesCantidad[6] = edadesCantidad[6]+1;
+			edadesCantidadSalida[6] = edadesCantidadSalida[6]+1;
 		}
 	}
 	
-	public int cantidadEnRangoEdad(int edad)
+	public int cantidadEnRangoEdadS(int edad)
 	{
 		if(edad >= 0 && edad <= 10)
 		{
-			return edadesCantidad[0];
+			return edadesCantidadSalida[0];
 		}
 		else if(edad >= 11 && edad <= 20)
 		{
-			return edadesCantidad[1];
+			return edadesCantidadSalida[1];
 		}
 		else if(edad >= 21 && edad <= 30)
 		{
-			return edadesCantidad[2];
+			return edadesCantidadSalida[2];
 		}
 		else if(edad >= 31 && edad <= 40)
 		{
-			return edadesCantidad[3];
+			return edadesCantidadSalida[3];
 		}
 		else if(edad >= 41 && edad <= 50)
 		{
-			return edadesCantidad[4];
+			return edadesCantidadSalida[4];
 		}
 		else if(edad >= 51 && edad <= 60)
 		{
-			return edadesCantidad[5];
+			return edadesCantidadSalida[5];
 		}
 		else if(edad >= 61)
 		{
-			return edadesCantidad[6];
+			return edadesCantidadSalida[6];
+		}
+		
+		return 0;
+	}
+	
+	public void aumentarRangoEdadE(int edad)
+	{
+		if(edad >= 0 && edad <= 10)
+		{
+			
+			edadesCantidadEntrada[0] = edadesCantidadEntrada[0]+1;
+		}
+		else if(edad >= 11 && edad <= 20)
+		{
+			edadesCantidadEntrada[1] = edadesCantidadEntrada[1]+1;
+		}
+		else if(edad >= 21 && edad <= 30)
+		{	
+			edadesCantidadEntrada[2] = edadesCantidadEntrada[2]+1;
+		}
+		else if(edad >= 31 && edad <= 40)
+		{
+			edadesCantidadEntrada[3] = edadesCantidadEntrada[3]+1;
+		}
+		else if(edad >= 41 && edad <= 50)
+		{
+			edadesCantidadEntrada[4] = edadesCantidadEntrada[4]+1;
+		}
+		else if(edad >= 51 && edad <= 60)
+		{
+			edadesCantidadEntrada[5] = edadesCantidadEntrada[5]+1;
+		}
+		else if(edad >= 61)
+		{
+			edadesCantidadEntrada[6] = edadesCantidadEntrada[6]+1;
+		}
+	}
+	
+	public int cantidadEnRangoEdadE(int edad)
+	{
+		if(edad >= 0 && edad <= 10)
+		{
+			return edadesCantidadEntrada[0];
+		}
+		else if(edad >= 11 && edad <= 20)
+		{
+			return edadesCantidadEntrada[1];
+		}
+		else if(edad >= 21 && edad <= 30)
+		{
+			return edadesCantidadEntrada[2];
+		}
+		else if(edad >= 31 && edad <= 40)
+		{
+			return edadesCantidadEntrada[3];
+		}
+		else if(edad >= 41 && edad <= 50)
+		{
+			return edadesCantidadEntrada[4];
+		}
+		else if(edad >= 51 && edad <= 60)
+		{
+			return edadesCantidadEntrada[5];
+		}
+		else if(edad >= 61)
+		{
+			return edadesCantidadEntrada[6];
 		}
 		
 		return 0;
