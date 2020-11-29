@@ -14,7 +14,6 @@ import com.opencsv.CSVReaderBuilder;
 import model.data_structures.DiGraph;
 import model.data_structures.Edge;
 import model.data_structures.TablaHashSeparateChaining;
-import model.data_structures.Vertex;
 
 public class Modelo {
     private static final String DATOS1 = "data/201801-1-citibike-tripdata.csv";
@@ -60,6 +59,7 @@ public class Modelo {
         String[] viajes = csvViajes.readNext();
         int datosCargados = 0;
 
+
         TablaHashSeparateChaining<Integer,TablaHashSeparateChaining<Integer,Integer>> tabla = new TablaHashSeparateChaining<Integer,TablaHashSeparateChaining<Integer,Integer>>();
 
         while ((viajes = csvViajes.readNext()) != null) {
@@ -94,16 +94,14 @@ public class Modelo {
             }
             datosCargados++;
         }
-        Edge<Integer, Estacion> minArc = new Edge<>(null, null, 0);
-        Edge<Integer, Estacion> maxArc = new Edge<>(null, null, 0);
-        for (TablaHashSeparateChaining<Integer,Edge<Integer,Estacion>> th : (TablaHashSeparateChaining<Integer,Edge<Integer,Estacion>>[])grafo.edges().valueSet()) {
-            for(Edge<Integer,Estacion> arco:th.valueSet()){
-                if (arco.weight() < minArc.weight()) {
-                    minArc = arco;
-                }
-                if (arco.weight() > maxArc.weight()) {
-                    maxArc = arco;
-                }
+        Edge<Integer, Estacion> minArc = grafo.edges().get(0);
+        Edge<Integer, Estacion> maxArc = grafo.edges().get(0);
+        for (Edge<Integer, Estacion> arco : grafo.edges()) {
+            if (arco.weight() < minArc.weight()) {
+                minArc = arco;
+            }
+            if (arco.weight() > maxArc.weight()) {
+                maxArc = arco;
             }
         }
 

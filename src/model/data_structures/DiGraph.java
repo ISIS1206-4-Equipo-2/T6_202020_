@@ -5,14 +5,13 @@ import java.util.List;
 
 public class DiGraph<K extends Comparable<K>, V> {
 	private TablaHashSeparateChaining<K, Vertex<K, V>> vertices;
-	private TablaHashSeparateChaining<K,TablaHashSeparateChaining<K,Edge<K,V>>> edges;
-
+	private LinkedList<Edge<K, V>> edges;
 
 	// Lo cambiaremos luego para usar una tabla hash, pero no hay mucho tiempo de
 	// momento.
 	public DiGraph() {
 		vertices = new TablaHashSeparateChaining<K,Vertex<K, V>>();
-		edges = new TablaHashSeparateChaining<K,TablaHashSeparateChaining<K,Edge<K,V>>>();
+		edges = new LinkedList<Edge<K, V>>();
 	}
 
 	/**
@@ -71,15 +70,21 @@ public class DiGraph<K extends Comparable<K>, V> {
 			throw new IllegalArgumentException("Uno de los vertices no existe.");
 		}
 
+		for (Edge<K, V> edge : edges) {
+			if (edge.getSource().getId().equals(source) && edge.getDest().getId().equals(dest)) {
+				// Cambia el peso
+				edge.setWeight(weight);
+				// Se sale del metodo
+				return;
+			}
+		}
+
 		// Si no existe el arco, lo agrega como uno nuevo.
 		Edge<K, V> newEdge = new Edge<>(vSource, vDest, weight);
 		// Aumenda el indegree del nodo destino
 		vSource.addEdge(newEdge);
 		vDest.addEdge(newEdge);
-		if(!edges.contains(source)){
-			edges.put(source, new TablaHashSeparateChaining<K,Edge<K,V>>());
-		}
-		edges.get(source).put(dest, newEdge);
+		edges.add(newEdge);
 	}
 
 	/**
@@ -102,9 +107,12 @@ public class DiGraph<K extends Comparable<K>, V> {
 	 * @return
 	 */
 	public Edge<K, V> getEdge(K idS, K idD) {
-		if(edges.contains(idS) && edges.get(idS).contains(idD)){
-			return edges.get(idS).get(idD);
+		for (Edge<K, V> edge : edges) {
+			if (edge.getSource().getId().equals(idS) && edge.getDest().getId().equals(idD)) {
+				return edge;
+			}
 		}
+
 		return null;
 	}
 
@@ -150,7 +158,7 @@ public class DiGraph<K extends Comparable<K>, V> {
 	 * 
 	 * @return
 	 */
-	public TablaHashSeparateChaining<K,TablaHashSeparateChaining<K,Edge<K,V>>> edges() {
+	public List<Edge<K, V>> edges() {
 		return edges;
 	}
 
