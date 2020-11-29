@@ -88,14 +88,14 @@ public class Modelo {
                     tabla.get(iniID).put(finID, 1);
                 }
             } else {
-                int value = 0;
                 tabla.get(iniID).put(finID, tabla.get(iniID).get(finID)+1);
+                int value = tabla.get(iniID).get(finID);
                 grafo.getEdge(iniID, finID).setWeight((grafo.getEdge(iniID, finID).weight() * (value - 1) + Integer.parseInt(viajes[0])) / value);
             }
             datosCargados++;
         }
-        Edge<Integer, Estacion> minArc = grafo.edges().get(0);
-        Edge<Integer, Estacion> maxArc = grafo.edges().get(0);
+        Edge<Integer, Estacion> minArc = grafo.edges()[0];
+        Edge<Integer, Estacion> maxArc = grafo.edges()[0];
         for (Edge<Integer, Estacion> arco : grafo.edges()) {
             if (arco.weight() < minArc.weight()) {
                 minArc = arco;

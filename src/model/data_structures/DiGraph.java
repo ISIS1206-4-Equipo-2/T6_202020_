@@ -5,13 +5,13 @@ import java.util.List;
 
 public class DiGraph<K extends Comparable<K>, V> {
 	private TablaHashSeparateChaining<K, Vertex<K, V>> vertices;
-	private LinkedList<Edge<K, V>> edges;
+	private TablaHashSeparateChaining<String,Edge<K, V>> edges;
 
 	// Lo cambiaremos luego para usar una tabla hash, pero no hay mucho tiempo de
 	// momento.
 	public DiGraph() {
 		vertices = new TablaHashSeparateChaining<K,Vertex<K, V>>();
-		edges = new LinkedList<Edge<K, V>>();
+		edges = new TablaHashSeparateChaining<String,Edge<K, V>>();
 	}
 
 	/**
@@ -70,13 +70,9 @@ public class DiGraph<K extends Comparable<K>, V> {
 			throw new IllegalArgumentException("Uno de los vertices no existe.");
 		}
 
-		for (Edge<K, V> edge : edges) {
-			if (edge.getSource().getId().equals(source) && edge.getDest().getId().equals(dest)) {
-				// Cambia el peso
-				edge.setWeight(weight);
-				// Se sale del metodo
-				return;
-			}
+		if(edges.contains(source.toString()+","+dest.toString())){
+			edges.get(source.toString()+","+dest.toString()).setWeight(weight);
+			return;
 		}
 
 		// Si no existe el arco, lo agrega como uno nuevo.
@@ -84,7 +80,7 @@ public class DiGraph<K extends Comparable<K>, V> {
 		// Aumenda el indegree del nodo destino
 		vSource.addEdge(newEdge);
 		vDest.addEdge(newEdge);
-		edges.add(newEdge);
+		edges.put(source.toString()+","+dest.toString(), newEdge);
 	}
 
 	/**
@@ -107,10 +103,8 @@ public class DiGraph<K extends Comparable<K>, V> {
 	 * @return
 	 */
 	public Edge<K, V> getEdge(K idS, K idD) {
-		for (Edge<K, V> edge : edges) {
-			if (edge.getSource().getId().equals(idS) && edge.getDest().getId().equals(idD)) {
-				return edge;
-			}
+		if(edges.contains(idS.toString()+","+idD.toString())){
+			return edges.get(idS.toString()+","+idD.toString());
 		}
 
 		return null;
@@ -158,8 +152,14 @@ public class DiGraph<K extends Comparable<K>, V> {
 	 * 
 	 * @return
 	 */
-	public List<Edge<K, V>> edges() {
-		return edges;
+	@SuppressWarnings("unchecked")
+	public Edge<K, V>[] edges() {
+		Object[]raw= edges.valueSet();
+		Edge<K, V>[] answer = new Edge[raw.length];
+		for(int i=0;i<raw.length;i++){
+			answer[i]=(Edge<K, V>) raw[i];
+		}
+		return answer;
 	}
 
 	/**
