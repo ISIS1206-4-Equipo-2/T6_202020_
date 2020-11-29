@@ -13,6 +13,7 @@ import com.opencsv.CSVReaderBuilder;
 
 import model.data_structures.DiGraph;
 import model.data_structures.Edge;
+import model.data_structures.TablaHashSeparateChaining;
 
 public class Modelo {
     private static final String DATOS1 = "data/201801-1-citibike-tripdata.csv";
@@ -57,9 +58,9 @@ public class Modelo {
         // Crea iterators sobre la lista de viajes.
         String[] viajes = csvViajes.readNext();
         int datosCargados = 0;
-        List<Integer> pI = new LinkedList<Integer>();
-        List<Integer> pF = new LinkedList<Integer>();
-        List<Integer> v = new LinkedList<Integer>();
+
+
+        TablaHashSeparateChaining<Integer,TablaHashSeparateChaining<Integer,Integer>> tabla = new TablaHashSeparateChaining<Integer,TablaHashSeparateChaining<Integer,Integer>>();
 
         while ((viajes = csvViajes.readNext()) != null) {
             int iniID = Integer.parseInt(viajes[3].trim());
@@ -80,24 +81,21 @@ public class Modelo {
             }
             if (grafo.getEdge(iniID, finID) == null) {
                 grafo.addEdge(iniID, finID, Integer.parseInt(viajes[0]));
-                pI.add(iniID);
-                pF.add(finID);
-                v.add(1);
-            } else {
-                int value = 0;
-                for (int i = 0; i < v.size(); i++) {
-                    if (pI.get(i) == iniID && pF.get(i) == finID) {
-                        v.set(i, value = v.get(i) + 1);
-                        break;
-                    }
+                if(!tabla.contains(iniID)){
+                    tabla.put(iniID, new TablaHashSeparateChaining<Integer,Integer>());
                 }
-                grafo.getEdge(iniID, finID).setWeight(
-                        (grafo.getEdge(iniID, finID).weight() * (value - 1) + Integer.parseInt(viajes[0])) / value);
+                if(!tabla.get(iniID).contains(finID)){
+                    tabla.get(iniID).put(finID, 1);
+                }
+            } else {
+                tabla.get(iniID).put(finID, tabla.get(iniID).get(finID)+1);
+                int value = tabla.get(iniID).get(finID);
+                grafo.getEdge(iniID, finID).setWeight((grafo.getEdge(iniID, finID).weight() * (value - 1) + Integer.parseInt(viajes[0])) / value);
             }
             datosCargados++;
         }
-        Edge<Integer, Estacion> minArc = grafo.edges().get(0);
-        Edge<Integer, Estacion> maxArc = grafo.edges().get(0);
+        Edge<Integer, Estacion> minArc = grafo.edges()[0];
+        Edge<Integer, Estacion> maxArc = grafo.edges()[0];
         for (Edge<Integer, Estacion> arco : grafo.edges()) {
             if (arco.weight() < minArc.weight()) {
                 minArc = arco;
