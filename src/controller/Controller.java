@@ -96,8 +96,12 @@ public class Controller {
 						Estacion[] masViajes = modelo.estacionConMasViajerosPorEdad(edad);
 						
 						view.printMessage("Mas por salida: " + masViajes[0].darNombre() + " con " + " " +masViajes[0].cantidadEnRangoEdadS(edad) +" salidas.");
+						view.printMessage("Longitud: " +masViajes[0].darLongitud());
+						view.printMessage("Latitud: " +masViajes[0].darLatitud());
+						view.printMessage("----------------------------------");
 						view.printMessage("Mas por entrada: " + masViajes[1].darNombre() + " con " + " " +masViajes[1].cantidadEnRangoEdadE(edad) +" entradas.");
-							
+						view.printMessage("Longitud: " +masViajes[1].darLongitud());
+						view.printMessage("Latitud: " +masViajes[1].darLatitud());	
 					} 
 					catch (Exception e) 
 					{

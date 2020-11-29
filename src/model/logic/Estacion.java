@@ -10,7 +10,10 @@ public class Estacion {
     private int[] edadesCantidadSalida;
     private int[] edadesCantidadEntrada;
     
-    public Estacion(String pNombre)
+    private Double latitud;
+    private Double longitud;
+    
+    public Estacion(String pNombre, Double latitud, Double longitud)
     {
     	edadesCantidadSalida = new int[7];
     	for (int i : edadesCantidadSalida) {
@@ -20,6 +23,9 @@ public class Estacion {
     	for (int i : edadesCantidadEntrada) {
 			i = 0;
 		}
+    	
+    	this.latitud = latitud;
+    	this.longitud = longitud;
         nombre=pNombre;
     }
     
@@ -27,6 +33,15 @@ public class Estacion {
 		return nombre;
 	}
 	
+	public double darLatitud()
+	{
+		return latitud;
+	}
+	
+	public double darLongitud()
+	{
+		return longitud;
+	}
 	public void aumentarRangoEdadS(int edad)
 	{
 		if(edad >= 0 && edad <= 10)

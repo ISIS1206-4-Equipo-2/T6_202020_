@@ -67,18 +67,25 @@ public class Modelo {
             int iniID = Integer.parseInt(viajes[3].trim());
             int edadt = (Integer.parseInt(viajes[13].trim()));
             int edad = 2018-edadt;
+            
+            double start_latitud = Double.parseDouble(viajes[5].trim());
+            double start_longitud = Double.parseDouble(viajes[6].trim());
+            
+            double end_latitud = Double.parseDouble(viajes[9].trim());
+            double end_longitud = Double.parseDouble(viajes[10].trim());
+            
             String nombre1 = viajes[4].trim();
-            Estacion estacion1 = new Estacion(nombre1);
+            Estacion start_estacion = new Estacion(nombre1,start_latitud, start_longitud);
             
             String nombre2 = viajes[8].trim();
-            Estacion estacion2 = new Estacion(nombre2);
+            Estacion end_estacion = new Estacion(nombre2, end_latitud, end_longitud);
             
             if (!grafo.containsVertex(iniID)) {
                 //String nombre = viajes[4].trim();// Nombre
                 if (nombre1.equals("")) {
                     continue;
                 }
-                grafo.insertVertex(iniID, estacion1);
+                grafo.insertVertex(iniID, start_estacion);
             }
             int finID = Integer.parseInt(viajes[7].trim());
             if (!grafo.containsVertex(finID)) {
@@ -86,7 +93,7 @@ public class Modelo {
                 if (nombre2.equals("")) {
                     continue;
                 }
-                grafo.insertVertex(finID, estacion2);
+                grafo.insertVertex(finID, end_estacion);
             }
             if (grafo.getEdge(iniID, finID) == null) {
                 grafo.addEdge(iniID, finID, Integer.parseInt(viajes[0]));
