@@ -83,6 +83,7 @@ public class test_Digraph {
         assertFalse(vertices.contains(vfake));  //No deberia estar
     }
 
+    /*
     @Test
     public void testEdges(){
         setUp();
@@ -93,6 +94,7 @@ public class test_Digraph {
             }
         }
     }
+    */
 
     @Test
     public void testGetEdge(){
