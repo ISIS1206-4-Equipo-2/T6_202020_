@@ -7,6 +7,8 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import java.util.List;
+
+import org.apache.commons.lang3.ArrayUtils;
 import org.junit.Test;
 
 public class test_Digraph {
@@ -90,7 +92,7 @@ public class test_Digraph {
         Edge<Integer,String>[] edges = digrafo.edges(); //Lista de edges
         for(Vertex<Integer,String> vertice : digrafo.vertices()){ //Todos los vertices
             for(Edge<Integer,String> edge : vertice.edges()){ //Todos los edges de cada vertice
-                //assertTrue(edges.);
+                assertTrue(ArrayUtils.contains(edges, edge));
             }
         }
     }

@@ -3,7 +3,6 @@ package model.logic;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.LinkedList;
 import java.util.List;
 
 import com.opencsv.CSVParser;
@@ -121,16 +120,16 @@ public class Modelo {
         return "Grado de entrada: " + grafo.outdegree(pID) + "\nGrado de salida: " + grafo.indegree(pID);
     }
     
-    //Requerimiento 3 ---> Complejidad de 3n, recorre 3 veces la lista de vértices
+    //Requerimiento 3 ---> Complejidad de 3n, recorre 3 veces la lista de vï¿½rtices
     public void estacionesCriticas()
     {
     	//3 estaciones Top de llegada
     	List<Vertex<Integer, Estacion>>  lista = grafo.vertices();
-    	int condM1 = 0; //Condicional para el máximo
+    	int condM1 = 0; //Condicional para el mï¿½ximo
     	int condM2 = 0; 
     	int condM3 = 0;
     	
-    	int condS1 = 0; //Condicional para el mínimo
+    	int condS1 = 0; //Condicional para el mï¿½nimo
     	int condS2 = 0;
     	int condS3 = 0;
     	
@@ -216,12 +215,12 @@ public class Modelo {
 		}
     	
     	System.out.println("------------------------------------------");
-    	System.out.println("Estaciones con más llegadas Top: ");
+    	System.out.println("Estaciones con mï¿½s llegadas Top: ");
     	System.out.println("\n1: " + vCondM1 + " con " + condM1);
     	System.out.println("\n2: " + vCondM2 + " con " + condM2);
     	System.out.println("\n3: " + vCondM3 + " con " + condM3);
     	System.out.println("------------------------------------------");
-    	System.out.println("Estaciones con más salidas Top: ");
+    	System.out.println("Estaciones con mï¿½s salidas Top: ");
     	System.out.println("\n1: " + vCondS1 + " con " + condS1);
     	System.out.println("\n2: " + vCondS2 + " con " + condS2);
     	System.out.println("\n3: " + vCondS3 + " con " + condS3);
