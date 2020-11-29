@@ -9,8 +9,9 @@ public class View {
 	}
 
 	public void printMenu() {
-		System.out.println("1. Cargar datos");
+		System.out.println("\n1. Cargar datos");
 		System.out.println("2. Consultar grado de entrada y salida");
+		System.out.println("5. Estaciones críticas");
 	}
 
 	public void printMessage(String mensaje) {

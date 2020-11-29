@@ -63,6 +63,22 @@ public class Controller {
 						view.printMessage(e.getMessage());
 					}
 					break;
+				case "5": //Estaciones críticas
+					try
+					{
+						long t_i = System.currentTimeMillis();
+						modelo.estacionesCriticas();
+						long t_f = System.currentTimeMillis();
+						long tiempo = t_f - t_i;
+						double tiempoS = (double) tiempo / 1000;
+						view.printMessage("TIEMPO TOTAL REQUERIDO: " + tiempoS + " segundos");
+					}
+					catch (Exception e) 
+					{
+						view.printMessage("Hubo un error.");
+						view.printMessage(e.getMessage());
+					}
+					break;
 				default:
 					view.printMessage("--------- Opcion Invalida ---------");
 					break;

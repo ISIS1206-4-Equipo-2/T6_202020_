@@ -14,6 +14,7 @@ import com.opencsv.CSVReaderBuilder;
 import model.data_structures.DiGraph;
 import model.data_structures.Edge;
 import model.data_structures.TablaHashSeparateChaining;
+import model.data_structures.Vertex;
 
 public class Modelo {
     private static final String DATOS1 = "data/201801-1-citibike-tripdata.csv";
@@ -118,5 +119,117 @@ public class Modelo {
 
     public String darGradosPorID(int pID) {
         return "Grado de entrada: " + grafo.outdegree(pID) + "\nGrado de salida: " + grafo.indegree(pID);
+    }
+    
+    //Requerimiento 3 ---> Complejidad de 9n, recorre 9 veces el arreglo 
+    public void estacionesCriticas()
+    {
+    	//3 estaciones Top de llegada
+    	List<Vertex<Integer, Estacion>>  lista = grafo.vertices();
+    	int condM1 = 0; //Condicional para el máximo
+    	int condM2 = 0; 
+    	int condM3 = 0;
+    	
+    	int condS1 = 0; //Condicional para el mínimo
+    	int condS2 = 0;
+    	int condS3 = 0;
+    	
+    	int condU1 = Integer.MAX_VALUE; 
+    	int condU2 = Integer.MAX_VALUE;
+    	int condU3 = Integer.MAX_VALUE;
+    	
+    	String vCondM1 = ""; 
+    	String vCondM2 = "";
+    	String vCondM3 = "";
+    	
+    	String vCondS1 = "";
+    	String vCondS2 = "";
+    	String vCondS3 = "";
+    	
+    	String vCondU1 = "";
+    	String vCondU2 = "";
+    	String vCondU3 = "";
+    	
+    	
+    	for (Vertex<Integer, Estacion> vertex : lista) 
+    	{
+			if(vertex.indegree() > condM1)
+			{
+				vCondM1 = vertex.getInfo().darNombre();
+				condM1 = vertex.indegree();
+			}	
+			
+			if(vertex.outdegree() > condS1)
+			{
+				vCondS1 = vertex.getInfo().darNombre();
+				condS1 = vertex.outdegree();
+			}	
+			
+			if(vertex.indegree() + vertex.outdegree() < condS1)
+			{
+				vCondU1 = vertex.getInfo().darNombre();
+				condU1 = vertex.indegree() + vertex.outdegree();
+			}
+		}
+    	
+    	for (Vertex<Integer, Estacion> vertex : lista) 
+    	{
+			if(vertex.indegree() > condM2 && !vertex.getInfo().darNombre().equals(vCondM1))
+			{
+				vCondM2 = vertex.getInfo().darNombre();
+				condM2 = vertex.indegree();
+			}	
+			
+			if(vertex.outdegree() > condS2 && !vertex.getInfo().darNombre().equals(vCondS1))
+			{
+				vCondS2 = vertex.getInfo().darNombre();
+				condS2 = vertex.outdegree();
+			}	
+			
+			if(vertex.indegree() + vertex.outdegree() < condU2 && !vertex.getInfo().darNombre().equals(vCondU1))
+			{
+				vCondU2 = vertex.getInfo().darNombre();
+				condU2 = vertex.indegree() + vertex.outdegree();
+			}
+		}
+    	
+    		
+    	for (Vertex<Integer, Estacion> vertex : lista) 
+    	{
+			if(vertex.indegree() > condM3 && !vertex.getInfo().darNombre().equals(vCondM1) && !vertex.getInfo().darNombre().equals(vCondM2))
+			{
+				vCondM3 = vertex.getInfo().darNombre();
+				condM3 = vertex.indegree();
+			}	
+			
+			if(vertex.outdegree() > condS3 && !vertex.getInfo().darNombre().equals(vCondS1) && !vertex.getInfo().darNombre().equals(vCondS2))
+			{
+				vCondS3 = vertex.getInfo().darNombre();
+				condS3 = vertex.outdegree();
+			}	
+			
+			if(vertex.indegree() + vertex.outdegree() <  condS3 && !vertex.getInfo().darNombre().equals(vCondU1) &&  !vertex.getInfo().darNombre().equals(vCondU2))
+			{
+				vCondU3 = vertex.getInfo().darNombre();
+				condU3 = vertex.indegree() + vertex.outdegree();
+			}
+		}
+    	
+    	System.out.println("------------------------------------------");
+    	System.out.println("Estaciones con más llegadas Top: ");
+    	System.out.println("\n1: " + vCondM1 + " con " + condM1);
+    	System.out.println("\n2: " + vCondM2 + " con " + condM2);
+    	System.out.println("\n3: " + vCondM3 + " con " + condM3);
+    	System.out.println("------------------------------------------");
+    	System.out.println("Estaciones con más salidas Top: ");
+    	System.out.println("\n1: " + vCondS1 + " con " + condS1);
+    	System.out.println("\n2: " + vCondS2 + " con " + condS2);
+    	System.out.println("\n3: " + vCondS3 + " con " + condS3);
+    	System.out.println("------------------------------------------");
+    	System.out.println("Estaciones menos utilizadas: ");
+    	System.out.println("\n1: " + vCondU1 + " con " + condU1);
+    	System.out.println("\n2: " + vCondU2 + " con " + condU2);
+    	System.out.println("\n3: " + vCondU3 + " con " + condU3);
+    	
     }
 }
