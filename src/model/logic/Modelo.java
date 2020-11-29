@@ -121,7 +121,7 @@ public class Modelo {
         return "Grado de entrada: " + grafo.outdegree(pID) + "\nGrado de salida: " + grafo.indegree(pID);
     }
     
-    //Requerimiento 3 ---> Complejidad de 9n, recorre 9 veces el arreglo 
+    //Requerimiento 3 ---> Complejidad de 3n, recorre 3 veces la lista de vértices
     public void estacionesCriticas()
     {
     	//3 estaciones Top de llegada
