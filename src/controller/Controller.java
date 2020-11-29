@@ -63,7 +63,12 @@ public class Controller {
 						view.printMessage(e.getMessage());
 					}
 					break;
-				case "5": //Estaciones críticas
+				case "4":
+					
+					modelo.Clusters();
+					
+					break;
+				case "5": //Estaciones crï¿½ticas
 					try
 					{
 						long t_i = System.currentTimeMillis();

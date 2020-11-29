@@ -127,6 +127,48 @@ public class DiGraph<K extends Comparable<K>, V> {
 		return getVertex(id).vertices();
 	}
 
+	public DiGraph<K,V> invertir(){
+		DiGraph<K,V> resp = new DiGraph<K,V>();
+		for(Vertex<K,V>ver:vertices.valueSet()){
+			resp.insertVertex(ver.getId(), ver.getInfo());
+		}
+		for(Edge<K,V>ed:edges.valueSet()){
+			resp.addEdge(ed.getDest().getId(), ed.getSource().getId(), ed.weight());
+		}
+		return null;
+	}
+
+	public Pila<Vertex<K,V>> DFS(){
+		Pila<Vertex<K,V>>resp= new Pila<Vertex<K,V>>();
+		Object[]objs=vertices.valueSet();
+		Vertex[]vertexs=new Vertex[objs.length];
+		for(int i=0;i<objs.length;i++){
+			vertexs[i]=(Vertex<K,V>)objs[i];
+		}
+		for(Vertex<K,V>vert:vertexs){
+			vert.unmark();
+		}
+		for(Vertex<K,V>vert:vertexs){
+			if(!vert.getMark()){
+				DFSRecurr(vert,resp);
+			}
+		}
+		return resp;
+	}
+
+	public void DFSRecurr(Vertex<K,V>vert,Pila<Vertex<K,V>>resp){
+		vert.mark();
+		boolean flag=true;
+		for(Vertex<K,V> actual:vert.vertices()){
+			if(!actual.getMark()){
+				flag=false;
+				DFSRecurr(actual, resp);
+			}
+		}
+		if(flag);resp.push(vert);
+	}
+
+
 	/**
 	 * Devuelve el grado de entrada del v�rtice vertex (n�mero de arcos entrantes)
 	 * 
@@ -134,6 +176,9 @@ public class DiGraph<K extends Comparable<K>, V> {
 	 * @return
 	 */
 	public int indegree(K id) {
+		if(getVertex(id)==null){
+			return 0;
+		}
 		return getVertex(id).indegree();
 	}
 
@@ -144,6 +189,9 @@ public class DiGraph<K extends Comparable<K>, V> {
 	 * @return
 	 */
 	public int outdegree(K id) {
+		if(getVertex(id)==null){
+			return 0;
+		}
 		return getVertex(id).outdegree();
 	}
 
@@ -171,7 +219,6 @@ public class DiGraph<K extends Comparable<K>, V> {
 	public List<Vertex<K, V>> vertices() 
 	{
 		Object array[] = vertices.valueSet();
-		//Vertex<K, V>  array2[] = (Vertex<K, V>[]) new Object[array.length];
 		
 		LinkedList<Vertex<K, V>> list = new LinkedList<>();
 		
@@ -182,7 +229,6 @@ public class DiGraph<K extends Comparable<K>, V> {
 				
 		return list;
 	}
-	
 	
 	
 
