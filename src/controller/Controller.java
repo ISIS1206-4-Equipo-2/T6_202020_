@@ -2,6 +2,7 @@ package controller;
 
 import java.util.Scanner;
 
+import model.logic.Estacion;
 import model.logic.Modelo;
 import view.View;
 
@@ -82,6 +83,24 @@ public class Controller {
 					{
 						view.printMessage("Hubo un error.");
 						view.printMessage(e.getMessage());
+					}
+				
+					break;
+				case "7": //  Recomendador de Rutas
+					try 
+					{
+						view.printMessage("Introduzca la edad: ");
+						view.printMessage("----------------------------------");
+						
+						int edad = Integer.parseInt(lector.nextLine());
+						Estacion masViajes = modelo.estacionConMasViajerosPorEdad(edad);
+						view.printMessage(masViajes.darNombre());
+						view.printMessage(""+masViajes.cantidadEnRangoEdad(edad));
+							
+					} 
+					catch (Exception e) 
+					{
+						// TODO: handle exception
 					}
 					break;
 				default:

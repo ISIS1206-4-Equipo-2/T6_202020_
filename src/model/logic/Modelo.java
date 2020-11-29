@@ -65,20 +65,28 @@ public class Modelo {
 
         while ((viajes = csvViajes.readNext()) != null) {
             int iniID = Integer.parseInt(viajes[3].trim());
+            int edadt = (Integer.parseInt(viajes[13].trim()));
+            int edad = 2018-edadt;
+            String nombre1 = viajes[4].trim();
+            Estacion estacion1 = new Estacion(nombre1);
+            
+            String nombre2 = viajes[8].trim();
+            Estacion estacion2 = new Estacion(nombre2);
+            
             if (!grafo.containsVertex(iniID)) {
-                String nombre = viajes[4].trim();// Nombre
-                if (nombre.equals("")) {
+                //String nombre = viajes[4].trim();// Nombre
+                if (nombre1.equals("")) {
                     continue;
                 }
-                grafo.insertVertex(iniID, new Estacion(nombre));
+                grafo.insertVertex(iniID, estacion1);
             }
             int finID = Integer.parseInt(viajes[7].trim());
             if (!grafo.containsVertex(finID)) {
-                String nombre = viajes[8].trim();// Nombre
-                if (nombre.equals("")) {
+                //String nombre = viajes[8].trim();// Nombre
+                if (nombre2.equals("")) {
                     continue;
                 }
-                grafo.insertVertex(finID, new Estacion(nombre));
+                grafo.insertVertex(finID, estacion2);
             }
             if (grafo.getEdge(iniID, finID) == null) {
                 grafo.addEdge(iniID, finID, Integer.parseInt(viajes[0]));
@@ -93,6 +101,16 @@ public class Modelo {
                 int value = tabla.get(iniID).get(finID);
                 grafo.getEdge(iniID, finID).setWeight((grafo.getEdge(iniID, finID).weight() * (value - 1) + Integer.parseInt(viajes[0])) / value);
             }
+            
+            if(grafo.containsVertex(finID) && grafo.containsVertex(iniID))
+            {
+            	//System.out.println(edad);
+            	grafo.getVertex(iniID).getInfo().aumentarRangoEdad(edad);
+            	grafo.getVertex(finID).getInfo().aumentarRangoEdad(edad);
+            	//System.out.println(grafo.getVertex(iniID).getInfo().cantidadEnRangoEdad(edad));
+            }
+            
+            
             datosCargados++;
         }
         Edge<Integer, Estacion> minArc = grafo.edges()[0];
@@ -250,5 +268,25 @@ public class Modelo {
     	System.out.println("\n2: " + vCondU2 + " con " + condU2);
     	System.out.println("\n3: " + vCondU3 + " con " + condU3);
     	
+    }
+    
+    public Estacion estacionConMasViajerosPorEdad(int edad)
+    {
+    	List<Vertex<Integer, Estacion>>  lista = grafo.vertices();
+    	
+    	int mayor = 0;
+    	Estacion bigger = null;
+    	
+    	for (Vertex<Integer, Estacion> vertex : lista) 
+    	{
+			int actual = vertex.getInfo().cantidadEnRangoEdad(edad);
+			if(actual > mayor)
+			{
+				mayor = actual;
+				bigger = vertex.getInfo();
+			}
+		}
+    	
+    	return bigger;
     }
 }
