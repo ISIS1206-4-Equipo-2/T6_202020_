@@ -150,18 +150,18 @@ public class Vertex<K extends Comparable<K>, V> {
 	public List<Edge<K, V>> edges() {
 		return edges;
 	}
-	
+
 	/**
 	 * Cambia la posición de un vértice
 	 */
-	public void cambiarPosicion(int pos){
+	public void cambiarPosicion(int pos) {
 		posicion = pos;
 	}
 
 	/**
 	 * Retorna la poscion
 	 */
-	public int darPosicion(){
+	public int darPosicion() {
 		return posicion;
 	}
 }

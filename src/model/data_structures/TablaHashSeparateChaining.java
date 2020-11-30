@@ -21,7 +21,7 @@ public class TablaHashSeparateChaining<K extends Comparable<K>, V> implements Ta
 	 * Cantidad de rehashes
 	 */
 	private int cantidadRehashes;
-	
+
 	/**
 	 * Arreglo de nodos
 	 */
@@ -230,9 +230,8 @@ public class TablaHashSeparateChaining<K extends Comparable<K>, V> implements Ta
 		}
 		return cola;
 	}
-	
-	public int darCantidadRehashes()
-	{
+
+	public int darCantidadRehashes() {
 		return cantidadRehashes;
 	}
 }
