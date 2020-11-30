@@ -297,7 +297,7 @@ public class Modelo {
     }
     
     /**
-     * Retorna una tupla con dos estaciones, la primera es la que más salidas por la edad tiene, 
+     * Retorna una tupla con dos estaciones, la primera es la que mï¿½s salidas por la edad tiene, 
      * la segunda es la que mas entradas por edad tiene.
      * @param edad
      * @return
@@ -341,14 +341,14 @@ public class Modelo {
     
     
 /**
- * Método escrito por Santiago Bobadilla
+ * Mï¿½todo escrito por Santiago Bobadilla
  * Modificado por el Grupo 2
  */
     public void maps()
 	{
 
 		List<Vertex<Integer, Estacion>> vertex = grafo.vertices();
-		Edge[]  arcos = grafo.edges();
+		Edge<Integer,Estacion>[]  arcos = grafo.edges();
 
 		// Color de los vertices
 		String colVerti = darColorAleatorio();
@@ -366,7 +366,7 @@ public class Modelo {
 
 			for (int i = 0; i< vertex.size();i++)
 			{
-				Vertex aux = vertex.get(i);
+				Vertex<Integer,Estacion> aux = vertex.get(i);
 
 				if(aux != null)
 				{
@@ -404,13 +404,13 @@ public class Modelo {
 			
 			while (i < arcos.length)
 			{
-				Edge actual = (Edge) arcos[i];
+				Edge<Integer,Estacion> actual = (Edge<Integer,Estacion>) arcos[i];
 				//Arco aux= (Arco) actual.data;
 
-				Vertex inicio = actual.getDest();
+				Vertex<Integer,Estacion> inicio = actual.getDest();
 				Estacion infoInicio = (Estacion) inicio.getInfo();
 
-				Vertex fin = actual.getSource();
+				Vertex<Integer,Estacion> fin = actual.getSource();
 				Estacion infoFin = (Estacion) fin.getInfo();
 
 				if(inicio != null & fin != null)

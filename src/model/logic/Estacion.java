@@ -1,9 +1,5 @@
 package model.logic;
 
-import java.util.LinkedList;
-
-import model.data_structures.Edge;
-
 public class Estacion {
 
     private String nombre;
