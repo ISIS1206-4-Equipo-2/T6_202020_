@@ -106,7 +106,6 @@ public class DiGraph<K extends Comparable<K>, V> {
 		if(edges.contains(idS.toString()+","+idD.toString())){
 			return edges.get(idS.toString()+","+idD.toString());
 		}
-
 		return null;
 	}
 
@@ -178,12 +177,19 @@ public class DiGraph<K extends Comparable<K>, V> {
 		for (Object vertex : array) 
 		{
 			list.addLast((Vertex<K, V>) vertex);
-		}
-				
+		}			
 		return list;
 	}
-	
-	
-	
 
+	/**
+	 * Asocia una posición a los vertices en la lista de vertices
+	 */
+	public void asignarPosiciones(){
+		List<Vertex<K, V>> temp = this.vertices();
+		int cont = 0;
+        for(Vertex<K,V> v : temp){
+            v.cambiarPosicion(cont);
+            cont++;
+        }
+	}
 }

@@ -3,6 +3,7 @@ package model.logic;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.opencsv.CSVParser;
@@ -117,10 +118,10 @@ public class Modelo {
     }
 
     public String darGradosPorID(int pID) {
-        return "Grado de entrada: " + grafo.outdegree(pID) + "\nGrado de salida: " + grafo.indegree(pID);
+        return "Grado de entrada: " + grafo.indegree(pID) + "\nGrado de salida: " + grafo.outdegree(pID);
     }
     
-    //Requerimiento 3 ---> Complejidad de 3n, recorre 3 veces la lista de v�rtices
+    //Requerimiento 3 ---> Complejidad de 3n, recorre 3 veces la lista de vertices
     public void estacionesCriticas()
     {
     	//3 estaciones Top de llegada
@@ -228,7 +229,26 @@ public class Modelo {
     	System.out.println("Estaciones menos utilizadas: ");
     	System.out.println("\n1: " + vCondU1 + " con " + condU1);
     	System.out.println("\n2: " + vCondU2 + " con " + condU2);
-    	System.out.println("\n3: " + vCondU3 + " con " + condU3);
-    	
+    	System.out.println("\n3: " + vCondU3 + " con " + condU3);	
+    }
+
+    /**
+     * @param resistencia total 
+     */
+
+    public List<Ruta> rutasResistencia(int id, double resistencia){
+        Vertex<Integer,Estacion> v = grafo.getVertex(id);
+        Dfs dfs = new Dfs(grafo, v);
+        dfs.dfsRango(v, resistencia);
+        List<Ruta> rutas = dfs.darRutas();
+        return rutas;
+    }
+
+    /**
+     * Verifica los parámetros del método de rutas por resistencia
+     */
+    public void verificarParam(Integer id)throws Exception{
+        if(!grafo.containsVertex(id)) throw new Exception("El id no existe en el grafo");
+        if(grafo.getVertex(id).outdegree()==0) throw new Exception("No hay rutas salientes de la estacion");
     }
 }

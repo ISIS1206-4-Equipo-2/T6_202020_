@@ -1,9 +1,11 @@
 package controller;
 
-import java.util.Scanner;
+import java.util.*;
 
 import model.logic.Modelo;
 import view.View;
+import java.util.List;
+import model.logic.Ruta;
 
 public class Controller {
 
@@ -63,7 +65,11 @@ public class Controller {
 						view.printMessage(e.getMessage());
 					}
 					break;
-				case "5": //Estaciones críticas
+				case "3": //Cantidad de clusters 
+				break;
+				case "4": //Ruta circular (Mario)
+				break;
+				case "5": //Estaciones criticas (Felipe)
 					try
 					{
 						long t_i = System.currentTimeMillis();
@@ -79,9 +85,70 @@ public class Controller {
 						view.printMessage(e.getMessage());
 					}
 					break;
-				default:
+					default:
 					view.printMessage("--------- Opcion Invalida ---------");
-					break;
+				break;
+				case "6": //Ruta por resistencia (Luisa)
+					view.printMessage("Introduzca el id a consultar: ");
+					view.printMessage("----------------------------------");
+					try{
+						int id = Integer.parseInt(lector.nextLine());
+						view.printMessage("Introduzca el tiempo maximo de resistencia (en minutos):");
+						view.printMessage("----------------------------------");
+						int resistencia = Integer.parseInt(lector.nextLine());
+						Double resDouble = Double.valueOf(resistencia*60); //Paso a segundos
+						modelo.verificarParam(id);
+						long t_i = System.currentTimeMillis();
+						List<Ruta> rutas = modelo.rutasResistencia(id, resDouble);
+						long t_f = System.currentTimeMillis();
+						long tiempo = t_f - t_i;
+						double tiempoS = (double) tiempo / 1000;
+						if(!rutas.isEmpty()&& rutas!=null){
+							view.printMessage("----------------------------------");
+							view.printMessage("Se encontraron " + rutas.size() + " rutas");
+							view.printMessage("Tiempo requerido: " + tiempoS + " segundos");
+							view.printMessage("Introduzca la cantidad de rutas a consultar (0 para verlas todas):");
+							view.printMessage("----------------------------------");
+							int cant = Integer.parseInt(lector.nextLine());
+							int cont = 0;
+							if (cant!=0){
+								for(Ruta ruta : rutas){
+									if(cont<cant){
+										cont = cont +1;
+										Stack<Integer> estaciones = ruta.darEstaciones();
+										Stack<Double> tiempos = ruta.darTiempos();
+										String strEstaciones = Integer.toString(id);
+										String strTiempos = "";
+										for (Integer est : estaciones) strEstaciones = strEstaciones + " - " + est; 
+										for (Double t : tiempos) strTiempos = strTiempos + " - " + t; 
+										strTiempos= strTiempos.substring(2);//Elimina primer espacio
+										view.printMessage("Ruta " + cont + " : " + strEstaciones);
+										view.printMessage("Tiempos: " + strTiempos);
+										view.printMessage("--------------------------------------");
+									}
+								}
+							}
+							else{
+								for(Ruta ruta : rutas){
+										cont = cont +1;
+										Stack<Integer> estaciones = ruta.darEstaciones();
+										Stack<Double> tiempos = ruta.darTiempos();
+										String strEstaciones = Integer.toString(id);
+										String strTiempos = "";
+										for (Integer est : estaciones) strEstaciones = strEstaciones + " - " + est; 
+										for (Double t : tiempos) strTiempos = strTiempos + " - " + t; 
+										strTiempos= strTiempos.substring(2);//Elimina primer espacio
+										view.printMessage("Ruta " + cont + " : " + strEstaciones);
+										view.printMessage("Tiempos: " + strTiempos);
+										view.printMessage("--------------------------------------");
+								}
+							}
+						}
+					} catch(Exception e){
+						view.printMessage("------------ ERROR ---------------");
+						view.printMessage(e.getMessage());
+					}
+				break;
 			}
 		}
 		lector.close();
