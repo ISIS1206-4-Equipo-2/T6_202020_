@@ -11,6 +11,7 @@ public class Estacion {
     
     public Estacion(String pNombre, Double lat, Double lng)
     {
+		edadesCantidadEntrada = new int[7];
     	edadesCantidadSalida = new int[7];
 		nombre=pNombre;
 		latitud = lat;
