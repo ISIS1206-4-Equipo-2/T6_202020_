@@ -3,6 +3,7 @@ package controller;
 import java.util.Scanner;
 
 import model.logic.Estacion;
+import model.logic.GoogleMaps;
 import model.logic.Modelo;
 import view.View;
 
@@ -105,7 +106,20 @@ public class Controller {
 					} 
 					catch (Exception e) 
 					{
-						// TODO: handle exception
+						view.printMessage("Hubo un error.");
+						view.printMessage(e.getMessage());
+					}
+					break;
+				case "9": //Graficar??
+					try 
+					{
+						view.printMessage("Generando archivo...");
+						modelo.maps();
+					}
+					catch (Exception e) 
+					{
+						view.printMessage("Hubo un error.");
+						view.printMessage(e.getMessage());
 					}
 					break;
 				default:
