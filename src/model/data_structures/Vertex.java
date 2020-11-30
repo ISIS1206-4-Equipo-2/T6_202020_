@@ -70,6 +70,7 @@ public class Vertex<K extends Comparable<K>, V> {
 			}
 		} else if (edge.getDest().getId().equals(this.id) && edge.getDest().getInfo().equals(this.value)) {
 			if (!edges.contains(edge)) {
+				edges.add(edge);
 				indegree++;
 			}
 		} else {

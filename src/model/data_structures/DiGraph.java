@@ -125,6 +125,58 @@ public class DiGraph<K extends Comparable<K>, V> {
 	public List<Vertex<K, V>> adjacentVertex(K id) {
 		return getVertex(id).vertices();
 	}
+	@SuppressWarnings("all")
+	public DiGraph<K,V> invertir(){
+		DiGraph<K,V> resp = new DiGraph<K,V>();
+		Object[] objs=vertices.valueSet();
+		Vertex[]vers=new Vertex[objs.length];
+		for(int i=0;i<objs.length;i++){
+			vers[i]=(Vertex<K,V>)objs[i];
+		}
+		
+		for(Vertex<K,V>ver:vers){
+			resp.insertVertex(ver.getId(), ver.getInfo());
+		}
+		Object[] ejs=edges.valueSet();
+		Edge[]edjs=new Edge[ejs.length];
+		for(int i=0;i<ejs.length;i++){
+			edjs[i]=(Edge<K,V>)ejs[i];
+		}
+
+		for(Edge<K,V>ed:edjs){
+			resp.addEdge(ed.getDest().getId(), ed.getSource().getId(), ed.weight());
+		}
+		return resp;
+	}
+	@SuppressWarnings("all")
+	public Pila<Vertex<K,V>> DFS(){
+		Pila<Vertex<K,V>>resp= new Pila<Vertex<K,V>>();
+		Object[]objs=vertices.valueSet();
+		Vertex[]vertexs=new Vertex[objs.length];
+		for(int i=0;i<objs.length;i++){
+			vertexs[i]=(Vertex<K,V>)objs[i];
+		}
+		for(Vertex<K,V>vert:vertexs){
+			vert.unmark();
+		}
+		for(Vertex<K,V>vert:vertexs){
+			if(!vert.getMark()){
+				DFSRecurr(vert,resp);
+			}
+		}
+		return resp;
+	}
+
+	public void DFSRecurr(Vertex<K,V>vert,Pila<Vertex<K,V>>resp){
+		vert.mark();
+		for(Vertex<K,V> actual:vert.vertices()){
+			if(!actual.getMark()){
+				DFSRecurr(actual, resp);
+			}
+		}
+		resp.push(vert);
+	}
+
 
 	/**
 	 * Devuelve el grado de entrada del v�rtice vertex (n�mero de arcos entrantes)
@@ -133,6 +185,9 @@ public class DiGraph<K extends Comparable<K>, V> {
 	 * @return
 	 */
 	public int indegree(K id) {
+		if(getVertex(id)==null){
+			return 0;
+		}
 		return getVertex(id).indegree();
 	}
 
@@ -143,6 +198,9 @@ public class DiGraph<K extends Comparable<K>, V> {
 	 * @return
 	 */
 	public int outdegree(K id) {
+		if(getVertex(id)==null){
+			return 0;
+		}
 		return getVertex(id).outdegree();
 	}
 
@@ -170,7 +228,6 @@ public class DiGraph<K extends Comparable<K>, V> {
 	public List<Vertex<K, V>> vertices() 
 	{
 		Object array[] = vertices.valueSet();
-		//Vertex<K, V>  array2[] = (Vertex<K, V>[]) new Object[array.length];
 		
 		LinkedList<Vertex<K, V>> list = new LinkedList<>();
 		
@@ -180,6 +237,8 @@ public class DiGraph<K extends Comparable<K>, V> {
 		}			
 		return list;
 	}
+	
+	
 
 	/**
 	 * Asocia una posición a los vertices en la lista de vertices

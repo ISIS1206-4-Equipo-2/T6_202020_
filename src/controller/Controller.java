@@ -1,6 +1,8 @@
 package controller;
 
-import java.util.*;
+import java.util.LinkedList;
+import java.util.Scanner;
+import java.util.Stack;
 
 import model.logic.Modelo;
 import view.View;
@@ -67,9 +69,35 @@ public class Controller {
 					break;
 				case "3": //Cantidad de clusters 
 				break;
-				case "4": //Ruta circular (Mario)
-				break;
-				case "5": //Estaciones criticas (Felipe)
+				case "4":
+					try {
+						view.printMessage("Introduzca el primer id: ");
+						int id1 = Integer.parseInt(lector.nextLine());
+						view.printMessage("----------------------------------");
+						view.printMessage("Introduzca el segundo id: ");
+						int id2 = Integer.parseInt(lector.nextLine());
+						view.printMessage("----------------------------------");
+						LinkedList<LinkedList<Integer>>clusters=modelo.Clusters();
+						view.printMessage("Existen "+clusters.size()+" componentes fuertemente conexos en el grafo.");
+						boolean flag=false;
+						for(LinkedList<Integer>list:clusters){
+							if(list.contains(id1)&&list.contains(id2)){
+								flag=true;
+								break;
+							}
+						}
+						if(flag){
+							view.printMessage("Los IDs "+id1+" y "+id2+" se encuentran en el mismo cluster.");
+						}else{
+							view.printMessage("Los IDs "+id1+" y "+id2+" no se encuentran en el mismo cluster.");
+						}
+						view.printMessage("----------------------------------");
+					} catch (Exception e) {
+						view.printMessage("No se puddo ejecutar el metodo");
+						view.printMessage(e.getMessage());
+					}
+					break;
+				case "5": //Estaciones cr�ticas
 					try
 					{
 						long t_i = System.currentTimeMillis();

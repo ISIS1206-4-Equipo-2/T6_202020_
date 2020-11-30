@@ -13,6 +13,7 @@ import com.opencsv.CSVReaderBuilder;
 
 import model.data_structures.DiGraph;
 import model.data_structures.Edge;
+import model.data_structures.Pila;
 import model.data_structures.TablaHashSeparateChaining;
 import model.data_structures.Vertex;
 
@@ -119,6 +120,30 @@ public class Modelo {
 
     public String darGradosPorID(int pID) {
         return "Grado de entrada: " + grafo.indegree(pID) + "\nGrado de salida: " + grafo.outdegree(pID);
+    }
+    
+    public LinkedList<LinkedList<Integer>> Clusters(){
+        Pila<Vertex<Integer,Estacion>> pil=grafo.DFS();
+        DiGraph<Integer, Estacion> invert=grafo.invertir();
+        for(Vertex<Integer,Estacion>vert:grafo.vertices()){
+			vert.unmark();
+        }
+        LinkedList<LinkedList<Integer>>resp= new LinkedList<LinkedList<Integer>>();
+        while(!pil.empty()){
+            Pila<Vertex<Integer,Estacion>> group = new Pila<Vertex<Integer,Estacion>>();
+            Vertex<Integer,Estacion> actual=pil.pop();
+            if(!invert.getVertex(actual.getId()).getMark()){
+                invert.DFSRecurr(invert.getVertex(actual.getId()), group);
+            }else{
+                continue;
+            }
+            LinkedList<Integer> g=new LinkedList<Integer>();
+            while(!group.empty()){
+                g.add(group.pop().getId());
+            }
+            resp.add(g);
+        }
+        return resp;
     }
     
     //Requerimiento 3 ---> Complejidad de 3n, recorre 3 veces la lista de vertices
