@@ -13,7 +13,8 @@ public class View {
 		System.out.println("2. Consultar grado de entrada y salida");
 		System.out.println("5. Estaciones criticas");
 		System.out.println("6. Ruta por resistencia");
-		System.out.println("8. Ruta interes turistico");		
+		System.out.println("8. Ruta interes turistico");
+		System.out.println("9. BONO: Estaciones publicidad");		
 	}
 
 	public void printMessage(String mensaje) {

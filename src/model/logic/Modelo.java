@@ -3,8 +3,7 @@ package model.logic;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
@@ -22,6 +21,8 @@ public class Modelo {
     private static final String DATOS3 = "data/201801-3-citibike-tripdata.csv";
     private static final String DATOS4 = "data/201801-4-citibike-tripdata.csv";
     private DiGraph<Integer, Estacion> grafo;
+    private DiGraph<Integer, Estacion> grafoEdades;
+    String ruta;
 
     public Modelo() {
 
@@ -29,7 +30,6 @@ public class Modelo {
 
     public void cargarDatos(int datos) throws Exception {
         grafo = new DiGraph<Integer, Estacion>();
-        String ruta;
         switch (datos) {
             case 1:
                 ruta = DATOS1;
@@ -296,6 +296,122 @@ public class Modelo {
         if(vStart==null || vFinish==null) return null;
         resp[0]= vStart.getId();
         resp[1]= vFinish.getId();
+        return resp;
+    }
+
+    /**
+     * Crea un grafo con pesos para el rango de edad
+     * @param edad: "0" 0-10, "1" 11-20, "2" 21-30, "3" 31-40, "4" 41-50, "5" 51-60, "6" 60+
+     */
+    public Stack<Integer[]> estacionesEdades(String edades, int anioAct) throws Exception{
+        Stack<Integer[]> resp = new Stack<Integer[]>();
+        grafo = new DiGraph<Integer, Estacion>();
+        int edadMin = -1;
+        int edadMax = -1;
+        switch (edades) {
+            case "0":
+                edadMin=anioAct;
+                edadMax=anioAct-10;
+                break;
+            case "1":
+                edadMin=anioAct-11;
+                edadMax=anioAct-20;
+                break;
+            case "2":
+                edadMin=anioAct-21;
+                edadMax=anioAct-30;
+                break;
+            case "3":
+                edadMin=anioAct-31;
+                edadMax=anioAct-40;
+                break;
+            case "4":
+                edadMin=anioAct-41;
+                edadMax=anioAct-50;
+                break;
+            case "5":
+                edadMin=anioAct-51;
+                edadMax=anioAct-60;
+                break;
+            case "6":
+                edadMin=anioAct-61;
+                edadMax=anioAct-100; //Claim: Las personas de mas de 100 anios no montan bicis
+            default:
+                throw new Exception("No es un rango de edad valido");
+        }
+        final Reader readerViajes = Files.newBufferedReader(Paths.get(ruta));
+        // Crea el separador con ","
+        final CSVParser parser = new CSVParserBuilder().withSeparator(',').build();
+        // Crea los respectivos lectores
+        final CSVReader csvViajes = new CSVReaderBuilder(readerViajes).withCSVParser(parser).build();
+
+        /*
+         * Carga
+         */
+
+        // Crea iterators sobre la lista de viajes.
+        String[] viajes = csvViajes.readNext();
+
+        TablaHashSeparateChaining<Integer,TablaHashSeparateChaining<Integer,Integer>> tabla = new TablaHashSeparateChaining<Integer,TablaHashSeparateChaining<Integer,Integer>>();
+        //Revisa restricciones
+        while ((viajes = csvViajes.readNext()) != null) {
+            if(viajes[12].contains("Subscriber")){//Verifica a los suscriptores
+                String strEdad = viajes[13].trim();//Longitud
+                if (!strEdad.equals("")) {
+                    Integer edad = Integer.parseInt(strEdad);
+                    if(edad<=edadMin && edad>=edadMax){//Verifica que esté en el rango de edad
+                        int iniID = Integer.parseInt(viajes[3].trim());
+                        if (!grafo.containsVertex(iniID)) {
+                            String nombre = viajes[4].trim();// Nombre
+                            if (nombre.equals("")) {
+                                continue;
+                            }
+                            grafo.insertVertex(iniID, new Estacion(nombre));
+                        }
+                        int finID = Integer.parseInt(viajes[7].trim());
+                        if (!grafo.containsVertex(finID)) {
+                            String nombre = viajes[8].trim();// Nombre
+                            if (nombre.equals("")) {
+                                continue;
+                            }
+                            grafo.insertVertex(finID, new Estacion(nombre));
+                        }
+                        if (grafo.getEdge(iniID, finID) == null) {
+                            grafo.addEdge(iniID, finID, 1);
+                            if(!tabla.contains(iniID)){
+                                tabla.put(iniID, new TablaHashSeparateChaining<Integer,Integer>());
+                            }
+                            if(!tabla.get(iniID).contains(finID)){
+                                tabla.get(iniID).put(finID, 1);
+                            }
+                        } else {
+                            tabla.get(iniID).put(finID, tabla.get(iniID).get(finID)+1);
+                            grafo.getEdge(iniID, finID).setWeight(grafo.getEdge(iniID, finID).weight()+1);
+                        }
+                        Edge<Integer, Estacion> maxArc = grafo.edges()[0];
+                        for (Edge<Integer, Estacion> arco : grafo.edges()) {
+                            if (arco.weight() > maxArc.weight()){
+                                resp = new Stack<Integer[]>();
+                                maxArc = arco;
+                                Integer[] info = new Integer[3];
+                                info[0]=arco.getSource().getId();
+                                info[1]=arco.getDest().getId();
+                                info[2]=(int) Math.round(arco.weight());
+                                if(info[0]!=null && info[1]!=null && info[2]!=null) resp.push(info);
+                            }
+                            if (arco.weight() == maxArc.weight()){
+                                Integer[] info = new Integer[3];
+                                info[0]=arco.getSource().getId();
+                                info[1]=arco.getDest().getId();
+                                info[2]=(int) Math.round(arco.weight());
+                                if(info[0]!=null && info[1]!=null && info[2]!=null) resp.push(info);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(resp.isEmpty())return null;
         return resp;
     }
 }
