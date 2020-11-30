@@ -213,7 +213,7 @@ public class Modelo {
 				condS1 = vertex.outdegree();
 			}	
 			
-			if(vertex.indegree() + vertex.outdegree() < condS1)
+			if(vertex.indegree() + vertex.outdegree() < condU1)
 			{
 				vCondU1 = vertex.getInfo().darNombre();
 				condU1 = vertex.indegree() + vertex.outdegree();
@@ -256,7 +256,7 @@ public class Modelo {
 				condS3 = vertex.outdegree();
 			}	
 			
-			if(vertex.indegree() + vertex.outdegree() <  condS3 && !vertex.getInfo().darNombre().equals(vCondU1) &&  !vertex.getInfo().darNombre().equals(vCondU2))
+			if(vertex.indegree() + vertex.outdegree() <  condU3 && !vertex.getInfo().darNombre().equals(vCondU1) &&  !vertex.getInfo().darNombre().equals(vCondU2))
 			{
 				vCondU3 = vertex.getInfo().darNombre();
 				condU3 = vertex.indegree() + vertex.outdegree();
