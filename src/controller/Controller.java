@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Stack;
 
+import model.logic.Estacion;
 import model.logic.Modelo;
 import view.View;
 import java.util.List;
@@ -109,6 +110,43 @@ public class Controller {
 						double tiempoS = (double) tiempo / 1000;
 						view.printMessage("TIEMPO TOTAL REQUERIDO: " + tiempoS + " segundos");
 					} catch (Exception e) {
+						view.printMessage("Hubo un error.");
+						view.printMessage(e.getMessage());
+					}
+				
+					break;
+				case "7": //  Recomendador de Rutas
+					try 
+					{
+						view.printMessage("Introduzca la edad: ");
+						view.printMessage("----------------------------------");
+						
+						int edad = Integer.parseInt(lector.nextLine());
+						Estacion[] masViajes = modelo.estacionConMasViajerosPorEdad(edad);
+						
+						view.printMessage("Mas por salida: " + masViajes[0].darNombre() + " con " + " " +masViajes[0].cantidadEnRangoEdadS(edad) +" salidas.");
+						view.printMessage("Longitud: " +masViajes[0].darLongitud());
+						view.printMessage("Latitud: " +masViajes[0].darLatitud());
+						view.printMessage("----------------------------------");
+						view.printMessage("Mas por entrada: " + masViajes[1].darNombre() + " con " + " " +masViajes[1].cantidadEnRangoEdadE(edad) +" entradas.");
+						view.printMessage("Longitud: " +masViajes[1].darLongitud());
+						view.printMessage("Latitud: " +masViajes[1].darLatitud());	
+					} 
+					catch (Exception e) 
+					{
+						view.printMessage("Hubo un error.");
+						view.printMessage(e.getMessage());
+					}
+					break;
+				case "9": //Graficar??
+					try 
+					{
+						view.printMessage("Generando archivo...");
+						modelo.maps();
+						view.printMessage("Archivo generado.");
+					}
+					catch (Exception e) 
+					{
 						view.printMessage("Hubo un error.");
 						view.printMessage(e.getMessage());
 					}

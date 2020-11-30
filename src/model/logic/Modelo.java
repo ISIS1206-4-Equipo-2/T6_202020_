@@ -1,5 +1,9 @@
 package model.logic;
 
+import java.awt.Color;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -65,20 +69,35 @@ public class Modelo {
 
         while ((viajes = csvViajes.readNext()) != null) {
             int iniID = Integer.parseInt(viajes[3].trim());
+            int edadt = (Integer.parseInt(viajes[13].trim()));
+            int edad = 2018-edadt;
+            
+            double start_latitud = Double.parseDouble(viajes[5].trim());
+            double start_longitud = Double.parseDouble(viajes[6].trim());
+            
+            double end_latitud = Double.parseDouble(viajes[9].trim());
+            double end_longitud = Double.parseDouble(viajes[10].trim());
+            
+            String nombre1 = viajes[4].trim();
+            Estacion start_estacion = new Estacion(nombre1,start_latitud, start_longitud);
+            
+            String nombre2 = viajes[8].trim();
+            Estacion end_estacion = new Estacion(nombre2, end_latitud, end_longitud);
+            
             if (!grafo.containsVertex(iniID)) {
-                String nombre = viajes[4].trim();// Nombre
-                if (nombre.equals("")) {
+                //String nombre = viajes[4].trim();// Nombre
+                if (nombre1.equals("")) {
                     continue;
                 }
-                grafo.insertVertex(iniID, new Estacion(nombre));
+                grafo.insertVertex(iniID, start_estacion);
             }
             int finID = Integer.parseInt(viajes[7].trim());
             if (!grafo.containsVertex(finID)) {
-                String nombre = viajes[8].trim();// Nombre
-                if (nombre.equals("")) {
+                //String nombre = viajes[8].trim();// Nombre
+                if (nombre2.equals("")) {
                     continue;
                 }
-                grafo.insertVertex(finID, new Estacion(nombre));
+                grafo.insertVertex(finID, end_estacion);
             }
             if (grafo.getEdge(iniID, finID) == null) {
                 grafo.addEdge(iniID, finID, Integer.parseInt(viajes[0]));
@@ -94,6 +113,16 @@ public class Modelo {
                 grafo.getEdge(iniID, finID).setWeight(
                         (grafo.getEdge(iniID, finID).weight() * (value - 1) + Integer.parseInt(viajes[0])) / value);
             }
+            
+            if(grafo.containsVertex(finID) && grafo.containsVertex(iniID))
+            {
+            	//System.out.println(edad);
+            	grafo.getVertex(iniID).getInfo().aumentarRangoEdadS(edad);
+            	grafo.getVertex(finID).getInfo().aumentarRangoEdadE(edad);
+            	//System.out.println(grafo.getVertex(iniID).getInfo().cantidadEnRangoEdad(edad));
+            }
+            
+            
             datosCargados++;
         }
         Edge<Integer, Estacion> minArc = grafo.edges()[0];
@@ -266,4 +295,181 @@ public class Modelo {
         if (grafo.getVertex(id).outdegree() == 0)
             throw new Exception("No hay rutas salientes de la estacion");
     }
+    
+    /**
+     * Retorna una tupla con dos estaciones, la primera es la que más salidas por la edad tiene, 
+     * la segunda es la que mas entradas por edad tiene.
+     * @param edad
+     * @return
+     */
+    public Estacion[] estacionConMasViajerosPorEdad(int edad)
+    {
+    	List<Vertex<Integer, Estacion>>  lista = grafo.vertices();
+    	
+    	Estacion[] resp = {null, null};
+    	
+    	int mayorS = 0;
+    	Estacion biggerS = null;
+    	
+    	int mayorE = 0;
+    	Estacion biggerE = null;
+    	
+    
+    	for (Vertex<Integer, Estacion> vertex : lista) 
+    	{
+			int actualS = vertex.getInfo().cantidadEnRangoEdadS(edad);
+			int actualE = vertex.getInfo().cantidadEnRangoEdadE(edad);
+			
+			if(actualS > mayorS)
+			{
+				mayorS = actualS;
+				biggerS = vertex.getInfo();
+			}
+			
+			if(actualE > mayorE)
+			{
+				mayorE = actualE;
+				biggerE = vertex.getInfo();
+			}
+		}
+    	
+    	resp[0] = biggerS;
+    	resp[1] = biggerE;
+    	
+    	return resp;
+    }
+    
+    
+/**
+ * Método escrito por Santiago Bobadilla
+ * Modificado por el Grupo 2
+ */
+    public void maps()
+	{
+
+		List<Vertex<Integer, Estacion>> vertex = grafo.vertices();
+		Edge[]  arcos = grafo.edges();
+
+		// Color de los vertices
+		String colVerti = darColorAleatorio();
+
+		// Color de los arcos
+		String colArco = darColorAleatorio();
+
+		// Vamos a generar el archivo de los vertices.
+
+		try 
+		{
+			FileWriter file = new FileWriter("mapa/vertices.js");
+
+			file.write("citymap = { \n");
+
+			for (int i = 0; i< vertex.size();i++)
+			{
+				Vertex aux = vertex.get(i);
+
+				if(aux != null)
+				{
+					Estacion info = (Estacion) aux.getInfo();
+
+					file.write("\t" + aux.getId() + ": {\n");
+					file.write("\t center: {lat: " + info.darLatitud() + ", lng: " + info.darLongitud() + "},  \n");
+					file.write("\t population: " + 150 + ",   \n");
+					file.write("\t color: '" + colVerti + "', \n");
+					file.write("\t titulo: " + "'Hola'" + "\n");
+
+					if(i == grafo.numVertices()-1) file.write("\t } \n");
+					else 			       file.write("\t }, \n");
+				}
+			}
+
+			file.write("}");
+
+			file.close();
+
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+
+
+		try 
+		{
+			FileWriter file = new FileWriter("mapa/arcos.js");
+
+			file.write("cityroad = { \n");
+
+			//Edge actual = arcos[0];
+			int i = 0;
+			
+			while (i < arcos.length)
+			{
+				Edge actual = (Edge) arcos[i];
+				//Arco aux= (Arco) actual.data;
+
+				Vertex inicio = actual.getDest();
+				Estacion infoInicio = (Estacion) inicio.getInfo();
+
+				Vertex fin = actual.getSource();
+				Estacion infoFin = (Estacion) fin.getInfo();
+
+				if(inicio != null & fin != null)
+				{
+					file.write("\t" + inicio.getId() + fin.getId() + ": {\n");
+					file.write("\t inicio: {lat: " + infoInicio.darLatitud() + ", lng: " + infoInicio.darLongitud() + "},  \n");
+					file.write("\t fin: {lat: " + infoFin.darLatitud() + ", lng: " + infoFin.darLongitud() + "},  \n");
+					file.write("\t color: '" + colArco + "', \n");
+
+					if (i+1  == arcos.length)
+					{
+						file.write("\t  }  \n");
+					}
+					else
+					{
+						file.write("\t  }  ,\n");
+					}
+				}
+
+				i++;
+			}
+
+			file.write("}");
+
+			file.close();
+
+		}
+		catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		// Abre el mapa
+		abrirArchivo();
+	}
+
+
+	private String darColorAleatorio() 
+	{
+		Color color = new Color((int)(Math.random()*255), (int)(Math.random()*255), (int)(Math.random()*255));
+		String stringColor = Integer.toHexString(color.getRGB());
+		return stringColor;
+	}
+
+	private void abrirArchivo()
+	{
+		String osName = System.getProperty("os.name");
+		File file = new File("mapa/grafo.html");
+		try {
+
+			if (osName.startsWith("Windows")) 			Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
+			else if (osName.startsWith("Mac OS X")) 	Runtime.getRuntime().exec("open " + file.getAbsolutePath());
+			else 										System.out.println("Please open a browser and go to " + file.getAbsolutePath());
+
+		} 
+		catch (IOException e) {
+			System.out.println("Failed to start a browser to open the url " + file.getAbsolutePath());
+			e.printStackTrace();
+		}
+	}
+
+	
 }
