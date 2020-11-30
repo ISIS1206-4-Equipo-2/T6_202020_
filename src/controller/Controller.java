@@ -3,7 +3,6 @@ package controller;
 import java.util.Scanner;
 
 import model.logic.Estacion;
-import model.logic.GoogleMaps;
 import model.logic.Modelo;
 import view.View;
 
@@ -115,6 +114,7 @@ public class Controller {
 					{
 						view.printMessage("Generando archivo...");
 						modelo.maps();
+						view.printMessage("Archivo generado.");
 					}
 					catch (Exception e) 
 					{

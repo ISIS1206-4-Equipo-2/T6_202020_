@@ -12,7 +12,8 @@ public class View {
 		System.out.println("\n1. Cargar datos");
 		System.out.println("2. Consultar grado de entrada y salida");
 		System.out.println("5. Estaciones críticas");
-		System.out.println("7. Estacion con mas viajes por edad FALTA LA RUTA MAS CORTA CON DIJSKTRA");
+		System.out.println("7. Estacion con mas viajes por edad FALTA LA RUTA MAS CORTA CON DIJKSTRA");
+		System.out.println("9. Imprimir mapa");
 	}
 
 	public void printMessage(String mensaje) {

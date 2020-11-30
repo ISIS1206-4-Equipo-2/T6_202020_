@@ -345,7 +345,7 @@ public class Modelo {
 
 		try 
 		{
-			FileWriter file = new FileWriter("vertices.js");
+			FileWriter file = new FileWriter("mapa/vertices.js");
 
 			file.write("citymap = { \n");
 
@@ -380,7 +380,7 @@ public class Modelo {
 
 		try 
 		{
-			FileWriter file = new FileWriter("arcos.js");
+			FileWriter file = new FileWriter("mapa/arcos.js");
 
 			file.write("cityroad = { \n");
 
@@ -442,7 +442,7 @@ public class Modelo {
 	private void abrirArchivo()
 	{
 		String osName = System.getProperty("os.name");
-		File file = new File("grafo.html");
+		File file = new File("mapa/grafo.html");
 		try {
 
 			if (osName.startsWith("Windows")) 			Runtime.getRuntime().exec("rundll32 url.dll,FileProtocolHandler " + file.getAbsolutePath());
