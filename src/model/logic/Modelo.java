@@ -499,5 +499,24 @@ public class Modelo {
 		}
 	}
 
+	    /**
+     * @param resistencia total 
+     */
+
+    public List<Ruta> rutasResistencia(int id, double resistencia){
+        Vertex<Integer,Estacion> v = grafo.getVertex(id);
+        Dfs dfs = new Dfs(grafo, v);
+        dfs.dfsRango(v, resistencia);
+        List<Ruta> rutas = dfs.darRutas();
+        return rutas;
+    }
+
+    /**
+     * Verifica los parámetros del método de rutas por resistencia
+     */
+    public void verificarParam(Integer id)throws Exception{
+        if(!grafo.containsVertex(id)) throw new Exception("El id no existe en el grafo");
+        if(grafo.getVertex(id).outdegree()==0) throw new Exception("No hay rutas salientes de la estacion");
+	}
 	
 }
