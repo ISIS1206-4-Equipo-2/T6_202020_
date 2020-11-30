@@ -71,7 +71,17 @@ public class Modelo {
                 if (nombre.equals("")) {
                     continue;
                 }
-                grafo.insertVertex(iniID, new Estacion(nombre));
+                String strLatitud = viajes[5].trim();//Latitud
+                if (strLatitud.equals("")) {
+                    continue;
+                }
+                Double latitud = Double.parseDouble(strLatitud);
+                String strLongitud = viajes[6].trim();//Longitud
+                if (strLongitud.equals("")) {
+                    continue;
+                }
+                Double longitud = Double.parseDouble(strLongitud);
+                grafo.insertVertex(iniID, new Estacion(nombre, latitud, longitud));
             }
             int finID = Integer.parseInt(viajes[7].trim());
             if (!grafo.containsVertex(finID)) {
@@ -79,7 +89,17 @@ public class Modelo {
                 if (nombre.equals("")) {
                     continue;
                 }
-                grafo.insertVertex(finID, new Estacion(nombre));
+                String strLatitud = viajes[9].trim();//Latitud
+                if (strLatitud.equals("")) {
+                    continue;
+                }
+                Double latitudEnd = Double.parseDouble(strLatitud);
+                String strLongitud = viajes[10].trim();//Longitud
+                if (strLongitud.equals("")) {
+                    continue;
+                }
+                Double longitudEnd = Double.parseDouble(strLongitud);
+                grafo.insertVertex(finID, new Estacion(nombre,latitudEnd, longitudEnd));
             }
             if (grafo.getEdge(iniID, finID) == null) {
                 grafo.addEdge(iniID, finID, Integer.parseInt(viajes[0]));
@@ -275,5 +295,32 @@ public class Modelo {
     public void verificarParam(Integer id)throws Exception{
         if(!grafo.containsVertex(id)) throw new Exception("El id no existe en el grafo");
         if(grafo.getVertex(id).outdegree()==0) throw new Exception("No hay rutas salientes de la estacion");
+    }
+
+    /**
+     * Encuentra los puntos de inicio y fin mas cercanos (id de las estaciones)
+     * a las coordenas de inicio y fin de la ruta
+     * Posicion 0: Vertice inicial - Posicion 1: Vertice final 
+     */
+    public Integer[] darEstacionesCercanas(Double pLat0, Double pLng0, Double pLatf, Double pLngf){
+        Vertex<Integer,Estacion> vStart = null;
+        Vertex<Integer,Estacion> vFinish = null;
+        Double dmin0 = Double.POSITIVE_INFINITY;
+        Double dminf = Double.POSITIVE_INFINITY;
+        Integer[] resp = new Integer[2];
+        for(Vertex<Integer,Estacion> v : grafo.vertices()){
+            if(v.getInfo().darDistancia(pLat0, pLng0)<dmin0){
+                vStart = v;
+                dmin0 = v.getInfo().darDistancia(pLat0, pLng0);
+            }
+            if(v.getInfo().darDistancia(pLatf, pLngf)<dminf){
+                vFinish = v;
+                dminf = v.getInfo().darDistancia(pLat0, pLng0);
+            }
+        }
+        if(vStart==null || vFinish==null) return null;
+        resp[0]= vStart.getId();
+        resp[1]= vFinish.getId();
+        return resp;
     }
 }

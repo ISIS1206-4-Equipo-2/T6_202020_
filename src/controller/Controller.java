@@ -112,9 +112,6 @@ public class Controller {
 						view.printMessage("Hubo un error.");
 						view.printMessage(e.getMessage());
 					}
-					break;
-					default:
-					view.printMessage("--------- Opcion Invalida ---------");
 				break;
 				case "6": //Ruta por resistencia (Luisa)
 					view.printMessage("Introduzca el id a consultar: ");
@@ -176,6 +173,50 @@ public class Controller {
 						view.printMessage("------------ ERROR ---------------");
 						view.printMessage(e.getMessage());
 					}
+				break;
+				case "8"://Ruta interes turistico
+				view.printMessage("----------------- NOTA -----------------");
+				view.printMessage("Coordenadas de refencia de la ciudad de Nueva Yors");
+				view.printMessage("Latitud: 40.71 grados y Longitud: -73.93 grados");
+				view.printMessage("----------------------------------------");
+				try{
+					view.printMessage("Ingrese las coordenadas iniciales en formato lat long:");
+					String strGeo0 = lector.nextLine().trim();
+					String[] latLong = strGeo0.split(" "); 
+					Double latitud0 = Double.parseDouble(latLong[0]);
+					Double longitud0 = Double.parseDouble(latLong[1]);
+					if(latitud0 < -90 || latitud0 > 90 ) throw new Exception(); //Rango de latitudes
+					if(longitud0 < -180 || longitud0 > 180 ) throw new Exception(); //Rango de longitudes
+					view.printMessage("Ingrese las coordenadas finales en formato lat-long:");
+					String strGeof = lector.nextLine().trim();
+					String[] latLongf = strGeof.split("-"); 
+					Double latitudf = Double.parseDouble(latLongf[0]);
+					Double longitudf = Double.parseDouble(latLongf[1]);
+					if(latitudf < -90 || latitudf > 90 ) throw new Exception(); //Rango de latitudes
+					if(longitudf < -180 || longitudf > 180 ) throw new Exception(); //Rango de longitudes
+					long t_i = System.currentTimeMillis();
+					Integer[] ids = modelo.darEstacionesCercanas(latitud0, longitud0, latitud0, longitudf);
+					//TODO Implementar Dijkstra
+					long t_f = System.currentTimeMillis();
+					long tiempo = t_f - t_i;
+					double tiempoS = (double)tiempo/1000;
+					view.printMessage("\n---------------- RESUMEN  ------------------");
+					view.printMessage("Tiempo total: " + tiempoS + " segundos");
+					view.printMessage("Estaciones mas cercanas:");
+					view.printMessage("Inicio: " + ids[0]);
+					view.printMessage("Final : " + ids[1]);
+					view.printMessage("El camino mas corto entre ambas estaciones es: ");
+					//TODO Reportar respuesta
+					view.printMessage("---------------------------------------------");
+				}
+				catch(Exception e){
+					view.printMessage("--------- Formato de geoposicionamiento invalido ---------");
+					view.printMessage(e.getMessage());
+					fin = true;
+				}
+				break;
+				default:
+					view.printMessage("--------- Opcion Invalida ---------");
 				break;
 			}
 		}
