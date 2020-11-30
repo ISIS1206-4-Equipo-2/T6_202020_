@@ -12,13 +12,6 @@ public class Estacion {
     public Estacion(String pNombre, Double latitud, Double longitud)
     {
     	edadesCantidadSalida = new int[7];
-    	for (int i : edadesCantidadSalida) {
-			i = 0;
-		}
-    	edadesCantidadEntrada = new int[7];
-    	for (int i : edadesCantidadEntrada) {
-			i = 0;
-		}
     	
     	this.latitud = latitud;
     	this.longitud = longitud;
