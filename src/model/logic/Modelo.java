@@ -3,6 +3,7 @@ package model.logic;
 import java.io.Reader;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.util.LinkedList;
 import java.util.List;
 
 import com.opencsv.CSVParser;
@@ -121,23 +122,28 @@ public class Modelo {
         return "Grado de entrada: " + grafo.indegree(pID) + "\nGrado de salida: " + grafo.outdegree(pID);
     }
     
-    public void Clusters(){
+    public LinkedList<LinkedList<Integer>> Clusters(){
         Pila<Vertex<Integer,Estacion>> pil=grafo.DFS();
         DiGraph<Integer, Estacion> invert=grafo.invertir();
-        for(Vertex<Integer,Estacion>vert:invert.vertices()){
+        for(Vertex<Integer,Estacion>vert:grafo.vertices()){
 			vert.unmark();
-		}
+        }
+        LinkedList<LinkedList<Integer>>resp= new LinkedList<LinkedList<Integer>>();
         while(!pil.empty()){
             Pila<Vertex<Integer,Estacion>> group = new Pila<Vertex<Integer,Estacion>>();
             Vertex<Integer,Estacion> actual=pil.pop();
-            if(!actual.getMark()){
-                invert.DFSRecurr(actual, group);
+            if(!invert.getVertex(actual.getId()).getMark()){
+                invert.DFSRecurr(invert.getVertex(actual.getId()), group);
+            }else{
+                continue;
             }
+            LinkedList<Integer> g=new LinkedList<Integer>();
             while(!group.empty()){
-                System.out.print(group.pop()+",");
+                g.add(group.pop().getId());
             }
-            System.out.println(group.pop());
+            resp.add(g);
         }
+        return resp;
     }
     
     //Requerimiento 3 ---> Complejidad de 3n, recorre 3 veces la lista de v�rtices

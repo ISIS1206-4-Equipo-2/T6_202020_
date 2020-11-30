@@ -126,18 +126,30 @@ public class DiGraph<K extends Comparable<K>, V> {
 	public List<Vertex<K, V>> adjacentVertex(K id) {
 		return getVertex(id).vertices();
 	}
-
+	@SuppressWarnings("all")
 	public DiGraph<K,V> invertir(){
 		DiGraph<K,V> resp = new DiGraph<K,V>();
-		for(Vertex<K,V>ver:vertices.valueSet()){
+		Object[] objs=vertices.valueSet();
+		Vertex[]vers=new Vertex[objs.length];
+		for(int i=0;i<objs.length;i++){
+			vers[i]=(Vertex<K,V>)objs[i];
+		}
+		
+		for(Vertex<K,V>ver:vers){
 			resp.insertVertex(ver.getId(), ver.getInfo());
 		}
-		for(Edge<K,V>ed:edges.valueSet()){
+		Object[] ejs=edges.valueSet();
+		Edge[]edjs=new Edge[ejs.length];
+		for(int i=0;i<ejs.length;i++){
+			edjs[i]=(Edge<K,V>)ejs[i];
+		}
+
+		for(Edge<K,V>ed:edjs){
 			resp.addEdge(ed.getDest().getId(), ed.getSource().getId(), ed.weight());
 		}
-		return null;
+		return resp;
 	}
-
+	@SuppressWarnings("all")
 	public Pila<Vertex<K,V>> DFS(){
 		Pila<Vertex<K,V>>resp= new Pila<Vertex<K,V>>();
 		Object[]objs=vertices.valueSet();
@@ -158,14 +170,12 @@ public class DiGraph<K extends Comparable<K>, V> {
 
 	public void DFSRecurr(Vertex<K,V>vert,Pila<Vertex<K,V>>resp){
 		vert.mark();
-		boolean flag=true;
 		for(Vertex<K,V> actual:vert.vertices()){
 			if(!actual.getMark()){
-				flag=false;
 				DFSRecurr(actual, resp);
 			}
 		}
-		if(flag);resp.push(vert);
+		resp.push(vert);
 	}
 
 
