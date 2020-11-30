@@ -67,9 +67,7 @@ public class Controller {
 						view.printMessage(e.getMessage());
 					}
 					break;
-				case "3": //Cantidad de clusters 
-				break;
-				case "4":
+				case "3": // Cantidad de clusters
 					try {
 						view.printMessage("Introduzca el primer id: ");
 						int id1 = Integer.parseInt(lector.nextLine());
@@ -77,19 +75,21 @@ public class Controller {
 						view.printMessage("Introduzca el segundo id: ");
 						int id2 = Integer.parseInt(lector.nextLine());
 						view.printMessage("----------------------------------");
-						LinkedList<LinkedList<Integer>>clusters=modelo.Clusters();
-						view.printMessage("Existen "+clusters.size()+" componentes fuertemente conexos en el grafo.");
-						boolean flag=false;
-						for(LinkedList<Integer>list:clusters){
-							if(list.contains(id1)&&list.contains(id2)){
-								flag=true;
+						LinkedList<LinkedList<Integer>> clusters = modelo.Clusters();
+						view.printMessage(
+								"Existen " + clusters.size() + " componentes fuertemente conexos en el grafo.");
+						boolean flag = false;
+						for (LinkedList<Integer> list : clusters) {
+							if (list.contains(id1) && list.contains(id2)) {
+								flag = true;
 								break;
 							}
 						}
-						if(flag){
-							view.printMessage("Los IDs "+id1+" y "+id2+" se encuentran en el mismo cluster.");
-						}else{
-							view.printMessage("Los IDs "+id1+" y "+id2+" no se encuentran en el mismo cluster.");
+						if (flag) {
+							view.printMessage("Los IDs " + id1 + " y " + id2 + " se encuentran en el mismo cluster.");
+						} else {
+							view.printMessage(
+									"Los IDs " + id1 + " y " + id2 + " no se encuentran en el mismo cluster.");
 						}
 						view.printMessage("----------------------------------");
 					} catch (Exception e) {
@@ -97,41 +97,41 @@ public class Controller {
 						view.printMessage(e.getMessage());
 					}
 					break;
-				case "5": //Estaciones cr�ticas
-					try
-					{
+				case "4":
+
+					break;
+				case "5": // Estaciones cr�ticas
+					try {
 						long t_i = System.currentTimeMillis();
 						modelo.estacionesCriticas();
 						long t_f = System.currentTimeMillis();
 						long tiempo = t_f - t_i;
 						double tiempoS = (double) tiempo / 1000;
 						view.printMessage("TIEMPO TOTAL REQUERIDO: " + tiempoS + " segundos");
-					}
-					catch (Exception e) 
-					{
+					} catch (Exception e) {
 						view.printMessage("Hubo un error.");
 						view.printMessage(e.getMessage());
 					}
 					break;
-					default:
+				default:
 					view.printMessage("--------- Opcion Invalida ---------");
-				break;
-				case "6": //Ruta por resistencia (Luisa)
+					break;
+				case "6": // Ruta por resistencia (Luisa)
 					view.printMessage("Introduzca el id a consultar: ");
 					view.printMessage("----------------------------------");
-					try{
+					try {
 						int id = Integer.parseInt(lector.nextLine());
 						view.printMessage("Introduzca el tiempo maximo de resistencia (en minutos):");
 						view.printMessage("----------------------------------");
 						int resistencia = Integer.parseInt(lector.nextLine());
-						Double resDouble = Double.valueOf(resistencia*60); //Paso a segundos
+						Double resDouble = Double.valueOf(resistencia * 60); // Paso a segundos
 						modelo.verificarParam(id);
 						long t_i = System.currentTimeMillis();
 						List<Ruta> rutas = modelo.rutasResistencia(id, resDouble);
 						long t_f = System.currentTimeMillis();
 						long tiempo = t_f - t_i;
 						double tiempoS = (double) tiempo / 1000;
-						if(!rutas.isEmpty()&& rutas!=null){
+						if (!rutas.isEmpty() && rutas != null) {
 							view.printMessage("----------------------------------");
 							view.printMessage("Se encontraron " + rutas.size() + " rutas");
 							view.printMessage("Tiempo requerido: " + tiempoS + " segundos");
@@ -139,44 +139,47 @@ public class Controller {
 							view.printMessage("----------------------------------");
 							int cant = Integer.parseInt(lector.nextLine());
 							int cont = 0;
-							if (cant!=0){
-								for(Ruta ruta : rutas){
-									if(cont<cant){
-										cont = cont +1;
+							if (cant != 0) {
+								for (Ruta ruta : rutas) {
+									if (cont < cant) {
+										cont = cont + 1;
 										Stack<Integer> estaciones = ruta.darEstaciones();
 										Stack<Double> tiempos = ruta.darTiempos();
 										String strEstaciones = Integer.toString(id);
 										String strTiempos = "";
-										for (Integer est : estaciones) strEstaciones = strEstaciones + " - " + est; 
-										for (Double t : tiempos) strTiempos = strTiempos + " - " + t; 
-										strTiempos= strTiempos.substring(2);//Elimina primer espacio
+										for (Integer est : estaciones)
+											strEstaciones = strEstaciones + " - " + est;
+										for (Double t : tiempos)
+											strTiempos = strTiempos + " - " + t;
+										strTiempos = strTiempos.substring(2);// Elimina primer espacio
 										view.printMessage("Ruta " + cont + " : " + strEstaciones);
 										view.printMessage("Tiempos: " + strTiempos);
 										view.printMessage("--------------------------------------");
 									}
 								}
-							}
-							else{
-								for(Ruta ruta : rutas){
-										cont = cont +1;
-										Stack<Integer> estaciones = ruta.darEstaciones();
-										Stack<Double> tiempos = ruta.darTiempos();
-										String strEstaciones = Integer.toString(id);
-										String strTiempos = "";
-										for (Integer est : estaciones) strEstaciones = strEstaciones + " - " + est; 
-										for (Double t : tiempos) strTiempos = strTiempos + " - " + t; 
-										strTiempos= strTiempos.substring(2);//Elimina primer espacio
-										view.printMessage("Ruta " + cont + " : " + strEstaciones);
-										view.printMessage("Tiempos: " + strTiempos);
-										view.printMessage("--------------------------------------");
+							} else {
+								for (Ruta ruta : rutas) {
+									cont = cont + 1;
+									Stack<Integer> estaciones = ruta.darEstaciones();
+									Stack<Double> tiempos = ruta.darTiempos();
+									String strEstaciones = Integer.toString(id);
+									String strTiempos = "";
+									for (Integer est : estaciones)
+										strEstaciones = strEstaciones + " - " + est;
+									for (Double t : tiempos)
+										strTiempos = strTiempos + " - " + t;
+									strTiempos = strTiempos.substring(2);// Elimina primer espacio
+									view.printMessage("Ruta " + cont + " : " + strEstaciones);
+									view.printMessage("Tiempos: " + strTiempos);
+									view.printMessage("--------------------------------------");
 								}
 							}
 						}
-					} catch(Exception e){
+					} catch (Exception e) {
 						view.printMessage("------------ ERROR ---------------");
 						view.printMessage(e.getMessage());
 					}
-				break;
+					break;
 			}
 		}
 		lector.close();
