@@ -7,6 +7,8 @@ import java.util.Stack;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 
+import model.data_structures.Vertex;
+import model.logic.Bicicleta;
 import model.logic.Estacion;
 import model.logic.Modelo;
 import view.View;
@@ -143,33 +145,26 @@ public class Controller {
 						view.printMessage("----------------------------------");
 
 						int edad = Integer.parseInt(lector.nextLine());
-						Estacion[] masViajes = modelo.estacionConMasViajerosPorEdad(edad);
-
-						view.printMessage("Mas por salida: " + masViajes[0].darNombre() + " con " + " "
-								+ masViajes[0].cantidadEnRangoEdadS(edad) + " salidas.");
-						view.printMessage("Longitud: " + masViajes[0].darLongitud());
-						view.printMessage("Latitud: " + masViajes[0].darLatitud());
+						Vertex<Integer, Estacion>[] masViajes = modelo.estacionConMasViajerosPorEdad(edad);
+							
+						view.printMessage("Mas por salida: " + masViajes[0].getInfo().darNombre() + " con " + " "
+								+ masViajes[0].getInfo().cantidadEnRangoEdadS(edad) + " salidas.");
+						view.printMessage("Longitud: " + masViajes[0].getInfo().darLongitud());
+						view.printMessage("Latitud: " + masViajes[0].getInfo().darLatitud());
+						view.printMessage("ID: " + masViajes[0].getId());
 						view.printMessage("----------------------------------");
-						view.printMessage("Mas por entrada: " + masViajes[1].darNombre() + " con " + " "
-								+ masViajes[1].cantidadEnRangoEdadE(edad) + " entradas.");
-						view.printMessage("Longitud: " + masViajes[1].darLongitud());
-						view.printMessage("Latitud: " + masViajes[1].darLatitud());
+						view.printMessage("Mas por entrada: " + masViajes[1].getInfo().darNombre() + " con " + " "
+								+ masViajes[1].getInfo().cantidadEnRangoEdadE(edad) + " entradas.");
+						view.printMessage("Longitud: " + masViajes[1].getInfo().darLongitud());
+						view.printMessage("Latitud: " + masViajes[1].getInfo().darLatitud());
+						view.printMessage("ID: " + masViajes[1].getId());
+						modelo.losCaminosDeLaVida(masViajes[0], masViajes[1]);
 					} catch (Exception e) {
 						view.printMessage("Hubo un error.");
 						view.printMessage(e.getMessage());
 					}
 					break;
 
-				case "9": // Graficar??
-					try {
-						view.printMessage("Generando archivo...");
-						modelo.maps();
-						view.printMessage("Archivo generado.");
-					} catch (Exception e) {
-						view.printMessage("Hubo un error.");
-						view.printMessage(e.getMessage());
-					}
-					break;
 				case "6": // Ruta por resistencia (Luisa)
 					view.printMessage("Introduzca el id a consultar: ");
 					view.printMessage("----------------------------------");
@@ -240,7 +235,7 @@ public class Controller {
 					view.printMessage("Latitud: 40.71 grados y Longitud: -73.93 grados");
 					view.printMessage("----------------------------------------");
 					try {
-						view.printMessage("Ingrese las coordenadas iniciales en formato lat long:");
+						view.printMessage("Ingrese las coordenadas iniciales en formato lat long (ej: \"-12.5 15\"):");
 						String strGeo0 = lector.nextLine().trim();
 						String[] latLong = strGeo0.split(" ");
 						Double latitud0 = Double.parseDouble(latLong[0]);
@@ -249,9 +244,9 @@ public class Controller {
 							throw new Exception(); // Rango de latitudes
 						if (longitud0 < -180 || longitud0 > 180)
 							throw new Exception(); // Rango de longitudes
-						view.printMessage("Ingrese las coordenadas finales en formato lat-long:");
+						view.printMessage("Ingrese las coordenadas finales en formato lat-long (ej: \"-25 25.5\"):");
 						String strGeof = lector.nextLine().trim();
-						String[] latLongf = strGeof.split("-");
+						String[] latLongf = strGeof.split(" ");
 						Double latitudf = Double.parseDouble(latLongf[0]);
 						Double longitudf = Double.parseDouble(latLongf[1]);
 						if (latitudf < -90 || latitudf > 90)
@@ -260,22 +255,56 @@ public class Controller {
 							throw new Exception(); // Rango de longitudes
 						long t_i = System.currentTimeMillis();
 						Integer[] ids = modelo.darEstacionesCercanas(latitud0, longitud0, latitud0, longitudf);
-						// TODO Implementar Dijkstra
 						long t_f = System.currentTimeMillis();
 						long tiempo = t_f - t_i;
 						double tiempoS = (double) tiempo / 1000;
 						view.printMessage("\n---------------- RESUMEN  ------------------");
 						view.printMessage("Tiempo total: " + tiempoS + " segundos");
 						view.printMessage("Estaciones mas cercanas:");
-						view.printMessage("Inicio: " + ids[0]);
-						view.printMessage("Final : " + ids[1]);
+						view.printMessage("Inicio: "+ modelo.darVerticePorID(ids[0]).getInfo().darNombre() + " con la ID " + ids[0]);
+						view.printMessage("Final: "+ modelo.darVerticePorID(ids[1]).getInfo().darNombre() + " con la ID " + ids[1]);
+						
 						view.printMessage("El camino mas corto entre ambas estaciones es: ");
-						// TODO Reportar respuesta
+						modelo.losCaminosDeLaVida(modelo.darVerticePorID(ids[0]), modelo.darVerticePorID(ids[1]));
+						
 						view.printMessage("---------------------------------------------");
 					} catch (Exception e) {
 						view.printMessage("--------- Formato de geoposicionamiento invalido ---------");
 						view.printMessage(e.getMessage());
 						fin = true;
+						e.printStackTrace();
+					}
+					break;
+				case "9": // Graficar?? SII
+					try {
+						view.printMessage("Generando archivo...");
+						modelo.maps();
+						view.printMessage("Archivo generado.");
+					} catch (Exception e) {
+						view.printMessage("Hubo un error.");
+						view.printMessage(e.getMessage());
+					}
+					break;
+				case "10":
+					view.printMessage("Ingrese la ID de la bicicleta");
+					String id = lector.nextLine().trim();
+					
+					Bicicleta bici = modelo.darBicicleta(id);
+					
+					if(bici != null)
+					{
+						view.printMessage("Tiempo de viajes en minutos: " + bici.darTiempoUso()/60);
+						view.printMessage("Tiempo estacionada: " + bici.darTiempoEstacionada()/60);
+						view.printMessage("Estaciones visitadas:");
+						view.printMessage("---------------------------------------------");
+						for (Estacion estacion : bici.darIterableEstaciones()) 
+						{
+							view.printMessage(estacion.darNombre());
+						}
+					}
+					else
+					{
+						view.printMessage("No existe la bicicleta");
 					}
 					break;
 				default:

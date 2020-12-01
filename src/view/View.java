@@ -15,9 +15,10 @@ public class View {
 		System.out.println("4. Ruta Circular");
 		System.out.println("5. Estaciones criticas");
 		System.out.println("6. Ruta por resistencia");		
-		System.out.println("7. Estacion con mas viajes por edad FALTA LA RUTA MAS CORTA CON DIJKSTRA");
+		System.out.println("7. Estacion con mas viajes por edad + recorrido.");
 		System.out.println("8. Ruta interes turistico");
-		System.out.println("9. Imprimir mapa");
+		System.out.println("9. BONO: Imprimir mapa");
+		System.out.println("10. BONO: Identificador de Bicicletas");
 	}
 
 	public void printMessage(String mensaje) {
