@@ -5,6 +5,7 @@ import java.util.Scanner;
 import java.util.Stack;
 
 import model.data_structures.Vertex;
+import model.logic.Bicicleta;
 import model.logic.Estacion;
 import model.logic.Modelo;
 import view.View;
@@ -142,16 +143,6 @@ public class Controller {
 					}
 					break;
 
-				case "9": // Graficar?? SII
-					try {
-						view.printMessage("Generando archivo...");
-						modelo.maps();
-						view.printMessage("Archivo generado.");
-					} catch (Exception e) {
-						view.printMessage("Hubo un error.");
-						view.printMessage(e.getMessage());
-					}
-					break;
 				case "6": // Ruta por resistencia (Luisa)
 					view.printMessage("Introduzca el id a consultar: ");
 					view.printMessage("----------------------------------");
@@ -262,6 +253,38 @@ public class Controller {
 						view.printMessage(e.getMessage());
 						fin = true;
 						e.printStackTrace();
+					}
+					break;
+				case "9": // Graficar?? SII
+					try {
+						view.printMessage("Generando archivo...");
+						modelo.maps();
+						view.printMessage("Archivo generado.");
+					} catch (Exception e) {
+						view.printMessage("Hubo un error.");
+						view.printMessage(e.getMessage());
+					}
+					break;
+				case "10":
+					view.printMessage("Ingrese la ID de la bicicleta");
+					String id = lector.nextLine().trim();
+					
+					Bicicleta bici = modelo.darBicicleta(id);
+					
+					if(bici != null)
+					{
+						view.printMessage("Tiempo de viajes en minutos: " + bici.darTiempoUso()/60);
+						view.printMessage("Tiempo estacionada: " + bici.darTiempoEstacionada()/60);
+						view.printMessage("Estaciones visitadas:");
+						view.printMessage("---------------------------------------------");
+						for (Estacion estacion : bici.darIterableEstaciones()) 
+						{
+							view.printMessage(estacion.darNombre());
+						}
+					}
+					else
+					{
+						view.printMessage("No existe la bicicleta");
 					}
 					break;
 				default:

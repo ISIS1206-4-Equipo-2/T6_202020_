@@ -28,13 +28,16 @@ public class Modelo {
     private static final String DATOS3 = "data/201801-3-citibike-tripdata.csv";
     private static final String DATOS4 = "data/201801-4-citibike-tripdata.csv";
     private DiGraph<Integer, Estacion> grafo;
-
+    private TablaHashSeparateChaining<String, Bicicleta> bicicletas;
+	
     public Modelo() {
 
     }
 
     public void cargarDatos(int datos) throws Exception {
         grafo = new DiGraph<Integer, Estacion>();
+        bicicletas = new TablaHashSeparateChaining<String, Bicicleta>();
+        
         String ruta;
         switch (datos) {
             case 1:
@@ -72,6 +75,8 @@ public class Modelo {
             int iniID = Integer.parseInt(viajes[3].trim());
             int edadt = (Integer.parseInt(viajes[13].trim()));
             int edad = 2018-edadt;
+            int tripDuration = (Integer.parseInt(viajes[0].trim()));
+            String idBici = viajes[11].trim();
             
             String nombre1 = viajes[4].trim();
             
@@ -132,6 +137,26 @@ public class Modelo {
             	grafo.getVertex(iniID).getInfo().aumentarViajesSalida();
             	grafo.getVertex(finID).getInfo().aumentarRangoEdadE(edad);
             	grafo.getVertex(finID).getInfo().aumentarViajesLlegada();
+            	
+            	if(bicicletas.get(idBici) == null)
+            	{
+            		Bicicleta nuevaBici = new Bicicleta(idBici);
+            		nuevaBici.aumentarUso(tripDuration);
+                	nuevaBici.agregarEstacion(grafo.getVertex(iniID).getInfo());
+                	nuevaBici.agregarEstacion(grafo.getVertex(finID).getInfo()); 
+                	bicicletas.put(idBici, nuevaBici);
+                	System.out.println("BICI NUEVA");
+                	System.out.println(bicicletas.get(idBici).darTiempoUso());
+            	}
+            	else
+            	{
+            		bicicletas.get(idBici).aumentarUso(tripDuration);
+            		bicicletas.get(idBici).agregarEstacion(grafo.getVertex(iniID).getInfo());
+            		bicicletas.get(idBici).agregarEstacion(grafo.getVertex(finID).getInfo()); 
+            		System.out.println("BICI VIEJA");
+                	System.out.println(bicicletas.get(idBici).darTiempoUso());
+            	}
+            	
             	//System.out.println(grafo.getVertex(iniID).getInfo().cantidadEnRangoEdad(edad));
             }
             
@@ -554,6 +579,9 @@ public class Modelo {
     	return grafo.getVertex(id);
     }
     
-    
+    public Bicicleta darBicicleta(String id)
+    {
+    	return bicicletas.get(id);
+    }
 	
 }

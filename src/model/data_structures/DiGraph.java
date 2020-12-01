@@ -6,7 +6,8 @@ import java.util.List;
 public class DiGraph<K extends Comparable<K>, V> {
 	private TablaHashSeparateChaining<K, Vertex<K, V>> vertices;
 	private TablaHashSeparateChaining<String, Edge<K, V>> edges;
-
+	
+	
 	// Lo cambiaremos luego para usar una tabla hash, pero no hay mucho tiempo de
 	// momento.
 	public DiGraph() {
