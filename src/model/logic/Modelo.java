@@ -517,18 +517,18 @@ public class Modelo {
 			throw new Exception("No hay rutas salientes de la estacion");
 	}
 
-	public ImmutablePair<LinkedList<LinkedList<Integer>>, LinkedList<Integer>> circularRoute(int iD) {
+	public ImmutablePair<LinkedList<LinkedList<Integer>>, LinkedList<Integer>> circularRoute(int iD,int ti) {
 		Vertex<Integer, Estacion> vert = grafo.getVertex(iD);
 		LinkedList<LinkedList<Integer>> rCiclo = new LinkedList<LinkedList<Integer>>();
 		LinkedList<Vertex<Integer, Estacion>> recor = new LinkedList<Vertex<Integer, Estacion>>();
 		LinkedList<Integer> rTiempo = new LinkedList<Integer>();
 		int tiempo = 0;
-		return circRouteUtil(vert, tiempo, recor, rTiempo, rCiclo);
+		return circRouteUtil(vert, tiempo, recor, rTiempo, rCiclo,ti);
 	}
 
 	private ImmutablePair<LinkedList<LinkedList<Integer>>, LinkedList<Integer>> circRouteUtil(
 			Vertex<Integer, Estacion> vert, int tiempo, LinkedList<Vertex<Integer, Estacion>> recor,
-			LinkedList<Integer> rTiempo, LinkedList<LinkedList<Integer>> rCiclo) {
+			LinkedList<Integer> rTiempo, LinkedList<LinkedList<Integer>> rCiclo, int ti) {
 		LinkedList<Vertex<Integer, Estacion>> newrecor = new LinkedList<Vertex<Integer, Estacion>>();
 		for (Vertex<Integer, Estacion> ver : recor) {
 			newrecor.add(ver);
@@ -539,9 +539,9 @@ public class Modelo {
 			if (edge.getSource().equals(vert) && !edge.getSource().equals(edge.getDest())) {
 				int newtiempo = tiempo + 1200;
 				newtiempo += edge.weight();
-				if (!recor.contains(edge.getDest())) {
-					circRouteUtil(edge.getDest(), newtiempo, newrecor, rTiempo, rCiclo);
-				} else if (edge.getDest().equals(recor.getFirst())) {
+				if (!recor.contains(edge.getDest())&&newtiempo<=ti) {
+					circRouteUtil(edge.getDest(), newtiempo, newrecor, rTiempo, rCiclo,ti);
+				} else if (edge.getDest().equals(newrecor.getFirst())) {
 					LinkedList<Integer> r = new LinkedList<Integer>();
 					for (Vertex<Integer, Estacion> v : newrecor) {
 						r.add(v.getId());

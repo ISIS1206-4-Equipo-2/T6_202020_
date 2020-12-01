@@ -112,17 +112,15 @@ public class Controller {
 					view.printMessage("----------------------------------");
 					view.printMessage("Posibles rutas: ");
 					view.printMessage("----------------------------------");
-					ImmutablePair<LinkedList<LinkedList<Integer>>, LinkedList<Integer>> pair = modelo.circularRoute(idm);
+					ImmutablePair<LinkedList<LinkedList<Integer>>, LinkedList<Integer>> pair = modelo.circularRoute(idm,tm);
 					Iterator<LinkedList<Integer>> lista = pair.left.iterator();
 					Iterator<Integer> tiempom = pair.right.iterator();
 					while (lista.hasNext()) {
 						int ti=tiempom.next();
 						LinkedList<Integer> lis=lista.next();
-						if(ti<=tm){
-							view.printMessage("Minutos: "+ti/60);
-							view.printMessage(lis.toString());
-							view.printMessage("----------------------------------");
-						}
+						view.printMessage("Minutos: "+ti/60);
+						view.printMessage(lis.toString());
+						view.printMessage("----------------------------------");
 					}
 					break;
 				case "5": // Estaciones cr�ticas
