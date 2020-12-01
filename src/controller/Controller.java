@@ -2,7 +2,8 @@ package controller;
 
 import java.util.*;
 
-import model.logic.Modelo;
+import model.logic.*;
+import model.data_structures.Edge;
 import view.View;
 import java.util.List;
 import model.logic.Ruta;
@@ -194,21 +195,23 @@ public class Controller {
 					try{
 						String edad = lector.nextLine().trim();
 						long t_i = System.currentTimeMillis();
-						List<Integer[]> ids = modelo.estacionesEdades(edad, 2020);
+						Stack<Edge<Integer, Estacion>> ids = modelo.estacionesEdades(edad, 2020);
 						long t_f = System.currentTimeMillis();
 						long tiempo = t_f - t_i;
 						double tiempoS = (double)tiempo/1000;
 						if(ids==null) System.out.println("No hay rutas en este rango");
 						view.printMessage("\n---------------- RESUMEN  ------------------");
 						view.printMessage("Tiempo de búsqueda: " + tiempoS + " segundos");
-						view.printMessage("Las estaciones con mas flujo de turistas son:");
-						int cont = 1;
-						for(Integer[] est : ids){
-							view.printMessage("--------------Par " + cont + "------------");
-							view.printMessage("Inicio: " + est[0]);
-							view.printMessage("Final : " + est[1]);
-							view.printMessage("Total de viajes: " + est[2]);
-							cont++;
+						if(ids!=null){
+							view.printMessage("Las estaciones con mas flujo de turistas son:");
+							int cont = 1;
+							for(Edge<Integer, Estacion> est : ids){
+								view.printMessage("--------------Par " + cont + "------------");
+								view.printMessage("Inicio: " + modelo.darInfoEdge(est)[0]);
+								view.printMessage("Final : " + modelo.darInfoEdge(est)[1]);
+								view.printMessage("Total de viajes: " + modelo.darInfoEdge(est)[2]);
+								cont++;
+							}
 						}
 					}
 					catch(Exception e){

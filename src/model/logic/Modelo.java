@@ -303,9 +303,10 @@ public class Modelo {
      * Crea un grafo con pesos para el rango de edad
      * @param edad: "0" 0-10, "1" 11-20, "2" 21-30, "3" 31-40, "4" 41-50, "5" 51-60, "6" 60+
      */
-    public Stack<Integer[]> estacionesEdades(String edades, int anioAct) throws Exception{
-        Stack<Integer[]> resp = new Stack<Integer[]>();
+    public Stack<Edge<Integer, Estacion>> estacionesEdades(String edades, int anioAct) throws Exception{
+        Stack<Edge<Integer, Estacion>> resp = new Stack<Edge<Integer, Estacion>>();
         grafo = new DiGraph<Integer, Estacion>();
+        Double maxWeight = 0.0;
         int edadMin = -1;
         int edadMax = -1;
         switch (edades) {
@@ -336,6 +337,7 @@ public class Modelo {
             case "6":
                 edadMin=anioAct-61;
                 edadMax=anioAct-100; //Claim: Las personas de mas de 100 anios no montan bicis
+                break;
             default:
                 throw new Exception("No es un rango de edad valido");
         }
@@ -389,22 +391,18 @@ public class Modelo {
                             grafo.getEdge(iniID, finID).setWeight(grafo.getEdge(iniID, finID).weight()+1);
                         }
                         Edge<Integer, Estacion> maxArc = grafo.edges()[0];
+                        if(resp.size()==0 && maxArc!= null) resp.push(maxArc);
+                        Edge<Integer, Estacion>[] tempEdges = grafo.edges();
                         for (Edge<Integer, Estacion> arco : grafo.edges()) {
-                            if (arco.weight() > maxArc.weight()){
-                                resp = new Stack<Integer[]>();
-                                maxArc = arco;
-                                Integer[] info = new Integer[3];
-                                info[0]=arco.getSource().getId();
-                                info[1]=arco.getDest().getId();
-                                info[2]=(int) Math.round(arco.weight());
-                                if(info[0]!=null && info[1]!=null && info[2]!=null) resp.push(info);
+                            if (arco.weight() > maxWeight){
+                                resp = new Stack<Edge<Integer, Estacion>>();
+                                maxWeight = arco.weight();
+                                if(arco!=null) resp.push(arco);
                             }
-                            if (arco.weight() == maxArc.weight()){
-                                Integer[] info = new Integer[3];
-                                info[0]=arco.getSource().getId();
-                                info[1]=arco.getDest().getId();
-                                info[2]=(int) Math.round(arco.weight());
-                                if(info[0]!=null && info[1]!=null && info[2]!=null) resp.push(info);
+                            if (arco.weight() == maxWeight){
+                                if(!resp.contains(arco)){
+                                    if(arco!=null) resp.push(arco);
+                                }
                             }
                         }
                     }
@@ -414,4 +412,14 @@ public class Modelo {
         if(resp.isEmpty())return null;
         return resp;
     }
+
+    public Integer[] darInfoEdge(Edge<Integer, Estacion> arco){
+        Integer[] info = new Integer[3];
+        info[0]=arco.getSource().getId();
+        info[1]=arco.getDest().getId();
+        info[2]=(int) Math.round(arco.weight());
+        if(info[0]!=null && info[1]!=null && info[2]!=null) return info;
+        else return null;
+    }
 }
+
