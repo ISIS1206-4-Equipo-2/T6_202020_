@@ -15,6 +15,9 @@ import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
 
+import org.apache.commons.lang3.tuple.ImmutablePair;
+import org.apache.commons.lang3.tuple.MutablePair;
+
 import model.data_structures.DiGraph;
 import model.data_structures.Edge;
 import model.data_structures.Pila;
@@ -518,5 +521,42 @@ public class Modelo {
         if(!grafo.containsVertex(id)) throw new Exception("El id no existe en el grafo");
         if(grafo.getVertex(id).outdegree()==0) throw new Exception("No hay rutas salientes de la estacion");
 	}
+
+	public ImmutablePair<LinkedList<LinkedList<Integer>>,LinkedList<Integer>> circularRoute(int iD) {
+		Vertex<Integer,Estacion>vert=grafo.getVertex(iD);
+		LinkedList<LinkedList<Integer>> rCiclo= new LinkedList<LinkedList<Integer>>();
+		LinkedList<Vertex<Integer,Estacion>> recor=new LinkedList<Vertex<Integer,Estacion>>();
+		LinkedList<Integer>rTiempo=new LinkedList<Integer>();
+		int tiempo=0;
+		return circRouteUtil(vert,tiempo,recor, rTiempo,rCiclo);
+	}
+
+	private ImmutablePair<LinkedList<LinkedList<Integer>>,LinkedList<Integer>> circRouteUtil(Vertex<Integer,Estacion> vert,int tiempo,LinkedList<Vertex<Integer,Estacion>> recor,LinkedList<Integer>rTiempo, LinkedList<LinkedList<Integer>> rCiclo) {
+		LinkedList<Vertex<Integer,Estacion>> newrecor= new LinkedList<Vertex<Integer,Estacion>>();
+		for(Vertex<Integer,Estacion> ver:recor){
+			newrecor.add(ver);
+		}
+		newrecor.add(vert);
+
+		for(Edge<Integer,Estacion> edge:vert.edges()){
+			if(edge.getSource().equals(vert)&& !edge.getSource().equals(edge.getDest())){
+				int newtiempo=tiempo+1200;
+				newtiempo+=edge.weight();
+				if(!recor.contains(edge.getDest())){
+					circRouteUtil(edge.getDest(), newtiempo, newrecor, rTiempo, rCiclo);
+				}else if(edge.getDest().equals(recor.getFirst())){
+					LinkedList<Integer>r=new LinkedList<Integer>();
+					for(Vertex<Integer,Estacion> v:newrecor){
+						r.add(v.getId());
+					}
+					rCiclo.add(r);
+					rTiempo.add(tiempo);
+				}
+			}
+		}
+		return new ImmutablePair<LinkedList<LinkedList<Integer>>,LinkedList<Integer>>( rCiclo, rTiempo);
+	}
+
+
 	
 }

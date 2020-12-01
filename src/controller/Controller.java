@@ -1,8 +1,11 @@
 package controller;
 
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Stack;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import model.logic.Estacion;
 import model.logic.Modelo;
@@ -99,7 +102,26 @@ public class Controller {
 					}
 					break;
 				case "4":
-
+					view.printMessage("Introduzca el id de inicio: ");
+					int idm = Integer.parseInt(lector.nextLine());
+					view.printMessage("----------------------------------");
+					view.printMessage("Introduzca el tiempo dispoible: ");
+					int tm = Integer.parseInt(lector.nextLine())*60;
+					view.printMessage("----------------------------------");
+					view.printMessage("Posibles rutas: ");
+					view.printMessage("----------------------------------");
+					ImmutablePair<LinkedList<LinkedList<Integer>>, LinkedList<Integer>> pair = modelo.circularRoute(idm);
+					Iterator<LinkedList<Integer>> lista = pair.left.iterator();
+					Iterator<Integer> tiempom = pair.right.iterator();
+					while (lista.hasNext()) {
+						int ti=tiempom.next();
+						LinkedList<Integer> lis=lista.next();
+						if(ti<=tm){
+							view.printMessage("Minutos: "+ti/60);
+							view.printMessage(lis.toString());
+							view.printMessage("----------------------------------");
+						}
+					}
 					break;
 				case "5": // Estaciones cr�ticas
 					try {
