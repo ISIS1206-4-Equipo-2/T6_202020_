@@ -9,11 +9,14 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Stack;
 
 import com.opencsv.CSVParser;
 import com.opencsv.CSVParserBuilder;
 import com.opencsv.CSVReader;
 import com.opencsv.CSVReaderBuilder;
+
+import org.apache.commons.lang3.tuple.ImmutablePair;
 
 import model.data_structures.DiGraph;
 import model.data_structures.Edge;
@@ -25,16 +28,20 @@ public class Modelo {
     private static final String DATOS1 = "data/201801-1-citibike-tripdata.csv";
     private static final String DATOS2 = "data/201801-2-citibike-tripdata.csv";
     private static final String DATOS3 = "data/201801-3-citibike-tripdata.csv";
-    private static final String DATOS4 = "data/201801-4-citibike-tripdata.csv";
+	private static final String DATOS4 = "data/201801-4-citibike-tripdata.csv";
+	
     private DiGraph<Integer, Estacion> grafo;
-
+    private TablaHashSeparateChaining<String, Bicicleta> bicicletas;
+	private String ruta;
     public Modelo() {
 
     }
 
     public void cargarDatos(int datos) throws Exception {
         grafo = new DiGraph<Integer, Estacion>();
-        String ruta;
+        bicicletas = new TablaHashSeparateChaining<String, Bicicleta>();
+        
+
         switch (datos) {
             case 1:
                 ruta = DATOS1;
@@ -71,6 +78,8 @@ public class Modelo {
             int iniID = Integer.parseInt(viajes[3].trim());
             int edadt = (Integer.parseInt(viajes[13].trim()));
             int edad = 2018-edadt;
+            int tripDuration = (Integer.parseInt(viajes[0].trim()));
+            String idBici = viajes[11].trim();
             
             String nombre1 = viajes[4].trim();
             
@@ -128,7 +137,27 @@ public class Modelo {
             {
             	//System.out.println(edad);
             	grafo.getVertex(iniID).getInfo().aumentarRangoEdadS(edad);
+            	grafo.getVertex(iniID).getInfo().aumentarViajesSalida();
             	grafo.getVertex(finID).getInfo().aumentarRangoEdadE(edad);
+            	grafo.getVertex(finID).getInfo().aumentarViajesLlegada();
+            	
+            	if(bicicletas.get(idBici) == null)
+            	{
+            		Bicicleta nuevaBici = new Bicicleta(idBici);
+            		nuevaBici.aumentarUso(tripDuration);
+                	nuevaBici.agregarEstacion(grafo.getVertex(iniID).getInfo());
+                	nuevaBici.agregarEstacion(grafo.getVertex(finID).getInfo()); 
+                	bicicletas.put(idBici, nuevaBici);
+                	System.out.println("BICI NUEVA");
+                	System.out.println(bicicletas.get(idBici).darTiempoUso());
+            	}
+            	else
+            	{
+            		bicicletas.get(idBici).aumentarUso(tripDuration);
+            		bicicletas.get(idBici).agregarEstacion(grafo.getVertex(iniID).getInfo());
+            		bicicletas.get(idBici).agregarEstacion(grafo.getVertex(finID).getInfo()); 	
+            	}
+            	
             	//System.out.println(grafo.getVertex(iniID).getInfo().cantidadEnRangoEdad(edad));
             }
             
@@ -217,65 +246,65 @@ public class Modelo {
     	
     	for (Vertex<Integer, Estacion> vertex : lista) 
     	{
-			if(vertex.indegree() > condM1)
+			if(vertex.getInfo().darViajesLlegada() > condM1)
 			{
 				vCondM1 = vertex.getInfo().darNombre();
-				condM1 = vertex.indegree();
+				condM1 = vertex.getInfo().darViajesLlegada();
 			}	
 			
-			if(vertex.outdegree() > condS1)
+			if(vertex.getInfo().darViajesSalida() > condS1)
 			{
 				vCondS1 = vertex.getInfo().darNombre();
-				condS1 = vertex.outdegree();
+				condS1 = vertex.getInfo().darViajesSalida();
 			}	
 			
-			if(vertex.indegree() + vertex.outdegree() < condU1)
+			if(vertex.getInfo().darViajesLlegada() + vertex.getInfo().darViajesSalida() < condU1)
 			{
 				vCondU1 = vertex.getInfo().darNombre();
-				condU1 = vertex.indegree() + vertex.outdegree();
+				condU1 = vertex.getInfo().darViajesLlegada() + vertex.getInfo().darViajesSalida();
 			}
 		}
     	
     	for (Vertex<Integer, Estacion> vertex : lista) 
     	{
-			if(vertex.indegree() > condM2 && !vertex.getInfo().darNombre().equals(vCondM1))
+			if(vertex.getInfo().darViajesLlegada() > condM2 && !vertex.getInfo().darNombre().equals(vCondM1))
 			{
 				vCondM2 = vertex.getInfo().darNombre();
-				condM2 = vertex.indegree();
+				condM2 = vertex.getInfo().darViajesLlegada();
 			}	
 			
-			if(vertex.outdegree() > condS2 && !vertex.getInfo().darNombre().equals(vCondS1))
+			if(vertex.getInfo().darViajesSalida() > condS2 && !vertex.getInfo().darNombre().equals(vCondS1))
 			{
 				vCondS2 = vertex.getInfo().darNombre();
-				condS2 = vertex.outdegree();
+				condS2 = vertex.getInfo().darViajesSalida();
 			}	
 			
-			if(vertex.indegree() + vertex.outdegree() < condU2 && !vertex.getInfo().darNombre().equals(vCondU1))
+			if(vertex.getInfo().darViajesLlegada() + vertex.getInfo().darViajesSalida() < condU2 && !vertex.getInfo().darNombre().equals(vCondU1))
 			{
 				vCondU2 = vertex.getInfo().darNombre();
-				condU2 = vertex.indegree() + vertex.outdegree();
+				condU2 = vertex.getInfo().darViajesLlegada() + vertex.getInfo().darViajesSalida();
 			}
 		}
     	
     		
     	for (Vertex<Integer, Estacion> vertex : lista) 
     	{
-			if(vertex.indegree() > condM3 && !vertex.getInfo().darNombre().equals(vCondM1) && !vertex.getInfo().darNombre().equals(vCondM2))
+			if(vertex.getInfo().darViajesLlegada() > condM3 && !vertex.getInfo().darNombre().equals(vCondM1) && !vertex.getInfo().darNombre().equals(vCondM2))
 			{
 				vCondM3 = vertex.getInfo().darNombre();
-				condM3 = vertex.indegree();
+				condM3 = vertex.getInfo().darViajesLlegada();
 			}	
 			
-			if(vertex.outdegree() > condS3 && !vertex.getInfo().darNombre().equals(vCondS1) && !vertex.getInfo().darNombre().equals(vCondS2))
+			if(vertex.getInfo().darViajesSalida() > condS3 && !vertex.getInfo().darNombre().equals(vCondS1) && !vertex.getInfo().darNombre().equals(vCondS2))
 			{
 				vCondS3 = vertex.getInfo().darNombre();
-				condS3 = vertex.outdegree();
+				condS3 = vertex.getInfo().darViajesSalida();
 			}	
 			
-			if(vertex.indegree() + vertex.outdegree() <  condU3 && !vertex.getInfo().darNombre().equals(vCondU1) &&  !vertex.getInfo().darNombre().equals(vCondU2))
+			if(vertex.getInfo().darViajesLlegada() + vertex.getInfo().darViajesSalida() <  condU3 && !vertex.getInfo().darNombre().equals(vCondU1) &&  !vertex.getInfo().darNombre().equals(vCondU2))
 			{
 				vCondU3 = vertex.getInfo().darNombre();
-				condU3 = vertex.indegree() + vertex.outdegree();
+				condU3 = vertex.getInfo().darViajesLlegada() + vertex.getInfo().darViajesSalida();
 			}
 		}
     	
@@ -301,19 +330,20 @@ public class Modelo {
      * Retorna una tupla con dos estaciones, la primera es la que m�s salidas por la edad tiene, 
      * la segunda es la que mas entradas por edad tiene.
      * @param edad
-     * @return
+     * @return [0] salidas, [1] entradas
      */
-    public Estacion[] estacionConMasViajerosPorEdad(int edad)
+	@SuppressWarnings("all")
+    public Vertex<Integer, Estacion>[] estacionConMasViajerosPorEdad(int edad)
     {
     	List<Vertex<Integer, Estacion>>  lista = grafo.vertices();
     	
-    	Estacion[] resp = {null, null};
+    	Vertex[] resp = {null, null};
     	
     	int mayorS = 0;
-    	Estacion biggerS = null;
+    	Vertex<Integer, Estacion> biggerS = null;
     	
     	int mayorE = 0;
-    	Estacion biggerE = null;
+    	Vertex<Integer, Estacion> biggerE = null;
     	
     
     	for (Vertex<Integer, Estacion> vertex : lista) 
@@ -324,13 +354,13 @@ public class Modelo {
 			if(actualS > mayorS)
 			{
 				mayorS = actualS;
-				biggerS = vertex.getInfo();
+				biggerS = vertex;
 			}
 			
 			if(actualE > mayorE)
 			{
 				mayorE = actualE;
-				biggerE = vertex.getInfo();
+				biggerE = vertex;
 			}
 		}
     	
@@ -518,5 +548,195 @@ public class Modelo {
         if(!grafo.containsVertex(id)) throw new Exception("El id no existe en el grafo");
         if(grafo.getVertex(id).outdegree()==0) throw new Exception("No hay rutas salientes de la estacion");
 	}
+
+	public ImmutablePair<LinkedList<LinkedList<Integer>>,LinkedList<Integer>> circularRoute(int iD) {
+		Vertex<Integer,Estacion>vert=grafo.getVertex(iD);
+		LinkedList<LinkedList<Integer>> rCiclo= new LinkedList<LinkedList<Integer>>();
+		LinkedList<Vertex<Integer,Estacion>> recor=new LinkedList<Vertex<Integer,Estacion>>();
+		LinkedList<Integer>rTiempo=new LinkedList<Integer>();
+		int tiempo=0;
+		return circRouteUtil(vert,tiempo,recor, rTiempo,rCiclo);
+	}
+
+	private ImmutablePair<LinkedList<LinkedList<Integer>>,LinkedList<Integer>> circRouteUtil(Vertex<Integer,Estacion> vert,int tiempo,LinkedList<Vertex<Integer,Estacion>> recor,LinkedList<Integer>rTiempo, LinkedList<LinkedList<Integer>> rCiclo) {
+		LinkedList<Vertex<Integer,Estacion>> newrecor= new LinkedList<Vertex<Integer,Estacion>>();
+		for(Vertex<Integer,Estacion> ver:recor){
+			newrecor.add(ver);
+		}
+		newrecor.add(vert);
+
+		for(Edge<Integer,Estacion> edge:vert.edges()){
+			if(edge.getSource().equals(vert)&& !edge.getSource().equals(edge.getDest())){
+				int newtiempo=tiempo+1200;
+				newtiempo+=edge.weight();
+				if(!recor.contains(edge.getDest())){
+					circRouteUtil(edge.getDest(), newtiempo, newrecor, rTiempo, rCiclo);
+				}else if(edge.getDest().equals(recor.getFirst())){
+					LinkedList<Integer>r=new LinkedList<Integer>();
+					for(Vertex<Integer,Estacion> v:newrecor){
+						r.add(v.getId());
+					}
+					rCiclo.add(r);
+					rTiempo.add(tiempo);
+				}
+			}
+		}
+		return new ImmutablePair<LinkedList<LinkedList<Integer>>,LinkedList<Integer>>( rCiclo, rTiempo);
+	}
+
+
+    
+    
+    public void losCaminosDeLaVida(Vertex<Integer, Estacion> from, Vertex<Integer, Estacion> to)
+    {
+    	Dijkstra<Integer, Estacion> djk = new Dijkstra<Integer, Estacion>(grafo, from);
+    	
+    	//System.out.println("Peso: "+ djk.distTo(to));
+    	
+    	Stack<Edge<Integer, Estacion>> hola = djk.pathTo(to);
+    	
+    	
+    	if(hola != null && djk.distTo(to) != Double.POSITIVE_INFINITY && !(djk.distTo(to) == 0))
+    	{
+    		System.out.println("Cantidad de recorridos: " + hola.size());
+    		for (Edge<Integer, Estacion> edge : hola) 
+        	{
+    			System.out.println("\nDESDE " + edge.getSource().getInfo().darNombre() + " HASTA " + edge.getDest().getInfo().darNombre() );
+    		}
+    	}
+    	else if(hola != null && djk.distTo(to) == 0)
+    	{
+    		System.out.println("Cantidad de recorridos: " + hola.size());
+    	}
+    		
+    	else
+    		System.out.println("Es infinito");    
+    }
+    
+    public Vertex<Integer,Estacion> darVerticePorID(Integer id)
+    {
+    	return grafo.getVertex(id);
+    }
+    
+    public Bicicleta darBicicleta(String id)
+    {
+    	return bicicletas.get(id);
+    }
 	
+
+    /**
+     * Crea un grafo con pesos para el rango de edad
+     * @param edad: "0" 0-10, "1" 11-20, "2" 21-30, "3" 31-40, "4" 41-50, "5" 51-60, "6" 60+
+     */
+    public Stack<Integer[]> estacionesEdades(String edades, int anioAct) throws Exception{
+        Stack<Integer[]> resp = new Stack<Integer[]>();
+        grafo = new DiGraph<Integer, Estacion>();
+        int edadMin = -1;
+        int edadMax = -1;
+        switch (edades) {
+            case "0":
+                edadMin=anioAct;
+                edadMax=anioAct-10;
+                break;
+            case "1":
+                edadMin=anioAct-11;
+                edadMax=anioAct-20;
+                break;
+            case "2":
+                edadMin=anioAct-21;
+                edadMax=anioAct-30;
+                break;
+            case "3":
+                edadMin=anioAct-31;
+                edadMax=anioAct-40;
+                break;
+            case "4":
+                edadMin=anioAct-41;
+                edadMax=anioAct-50;
+                break;
+            case "5":
+                edadMin=anioAct-51;
+                edadMax=anioAct-60;
+                break;
+            case "6":
+                edadMin=anioAct-61;
+                edadMax=anioAct-100; //Claim: Las personas de mas de 100 anios no montan bicis
+            default:
+                throw new Exception("No es un rango de edad valido");
+        }
+        final Reader readerViajes = Files.newBufferedReader(Paths.get(ruta));
+        // Crea el separador con ","
+        final CSVParser parser = new CSVParserBuilder().withSeparator(',').build();
+        // Crea los respectivos lectores
+        final CSVReader csvViajes = new CSVReaderBuilder(readerViajes).withCSVParser(parser).build();
+
+        /*
+         * Carga
+         */
+
+        // Crea iterators sobre la lista de viajes.
+        String[] viajes = csvViajes.readNext();
+
+        TablaHashSeparateChaining<Integer,TablaHashSeparateChaining<Integer,Integer>> tabla = new TablaHashSeparateChaining<Integer,TablaHashSeparateChaining<Integer,Integer>>();
+        //Revisa restricciones
+        while ((viajes = csvViajes.readNext()) != null) {
+            if(viajes[12].contains("Subscriber")){//Verifica a los suscriptores
+                String strEdad = viajes[13].trim();//Longitud
+                if (!strEdad.equals("")) {
+                    Integer edad = Integer.parseInt(strEdad);
+                    if(edad<=edadMin && edad>=edadMax){//Verifica que esté en el rango de edad
+                        int iniID = Integer.parseInt(viajes[3].trim());
+                        if (!grafo.containsVertex(iniID)) {
+                            String nombre = viajes[4].trim();// Nombre
+                            if (nombre.equals("")) {
+                                continue;
+                            }
+                            grafo.insertVertex(iniID, new Estacion(nombre,0.0,0.0));
+                        }
+                        int finID = Integer.parseInt(viajes[7].trim());
+                        if (!grafo.containsVertex(finID)) {
+                            String nombre = viajes[8].trim();// Nombre
+                            if (nombre.equals("")) {
+                                continue;
+                            }
+                            grafo.insertVertex(finID, new Estacion(nombre,0.0,0.0));
+                        }
+                        if (grafo.getEdge(iniID, finID) == null) {
+                            grafo.addEdge(iniID, finID, 1);
+                            if(!tabla.contains(iniID)){
+                                tabla.put(iniID, new TablaHashSeparateChaining<Integer,Integer>());
+                            }
+                            if(!tabla.get(iniID).contains(finID)){
+                                tabla.get(iniID).put(finID, 1);
+                            }
+                        } else {
+                            tabla.get(iniID).put(finID, tabla.get(iniID).get(finID)+1);
+                            grafo.getEdge(iniID, finID).setWeight(grafo.getEdge(iniID, finID).weight()+1);
+                        }
+                        Edge<Integer, Estacion> maxArc = grafo.edges()[0];
+                        for (Edge<Integer, Estacion> arco : grafo.edges()) {
+                            if (arco.weight() > maxArc.weight()){
+                                resp = new Stack<Integer[]>();
+                                maxArc = arco;
+                                Integer[] info = new Integer[3];
+                                info[0]=arco.getSource().getId();
+                                info[1]=arco.getDest().getId();
+                                info[2]=(int) Math.round(arco.weight());
+                                if(info[0]!=null && info[1]!=null && info[2]!=null) resp.push(info);
+                            }
+                            if (arco.weight() == maxArc.weight()){
+                                Integer[] info = new Integer[3];
+                                info[0]=arco.getSource().getId();
+                                info[1]=arco.getDest().getId();
+                                info[2]=(int) Math.round(arco.weight());
+                                if(info[0]!=null && info[1]!=null && info[2]!=null) resp.push(info);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        if(resp.isEmpty())return null;
+        return resp;
+    }
 }
