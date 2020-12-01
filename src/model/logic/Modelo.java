@@ -152,9 +152,7 @@ public class Modelo {
             	{
             		bicicletas.get(idBici).aumentarUso(tripDuration);
             		bicicletas.get(idBici).agregarEstacion(grafo.getVertex(iniID).getInfo());
-            		bicicletas.get(idBici).agregarEstacion(grafo.getVertex(finID).getInfo()); 
-            		System.out.println("BICI VIEJA");
-                	System.out.println(bicicletas.get(idBici).darTiempoUso());
+            		bicicletas.get(idBici).agregarEstacion(grafo.getVertex(finID).getInfo()); 	
             	}
             	
             	//System.out.println(grafo.getVertex(iniID).getInfo().cantidadEnRangoEdad(edad));
