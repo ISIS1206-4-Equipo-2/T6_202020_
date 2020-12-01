@@ -275,17 +275,40 @@ public class Controller {
 						e.printStackTrace();
 					}
 					break;
-				case "9": // Graficar?? SII
-					try {
-						view.printMessage("Generando archivo...");
-						modelo.maps();
-						view.printMessage("Archivo generado.");
-					} catch (Exception e) {
-						view.printMessage("Hubo un error.");
-						view.printMessage(e.getMessage());
+				case "9": //Publicidad por edades
+					view.printMessage("Seleciones el rango de edad a consultar (ej. 1):");
+					view.printMessage("(0) 0-10   (1) 11-20  (2) 21-30  (3) 31-40");
+					view.printMessage("(4) 41-50  (5) 51-60  (6) 61+");
+					try{
+						String edad = lector.nextLine().trim();
+						long t_i = System.currentTimeMillis();
+						List<Integer[]> ids = modelo.estacionesEdades(edad, 2020);
+						long t_f = System.currentTimeMillis();
+						long tiempo = t_f - t_i;
+						double tiempoS = (double)tiempo/1000;
+						if(ids==null) System.out.println("No hay rutas en este rango");
+						view.printMessage("\n---------------- RESUMEN  ------------------");
+						view.printMessage("Tiempo de búsqueda: " + tiempoS + " segundos");
+						view.printMessage("Las estaciones con mas flujo de turistas son:");
+						int cont = 1;
+						for(Integer[] est : ids){
+							view.printMessage("--------------Par " + cont + "------------");
+							view.printMessage("Inicio: " + est[0]);
+							view.printMessage("Final : " + est[1]);
+							view.printMessage("Total de viajes: " + est[2]);
+							cont++;
+						}
 					}
+					catch(Exception e){
+						view.printMessage("--------- Error al hallar edades ---------");
+						view.printMessage(e.getMessage());
+						fin = true;
+					}
+				break;
+				default:
+					view.printMessage("--------- Opcion Invalida ---------");
 					break;
-				case "10":
+					case "10":
 					view.printMessage("Ingrese la ID de la bicicleta");
 					String id = lector.nextLine().trim();
 					
@@ -307,8 +330,15 @@ public class Controller {
 						view.printMessage("No existe la bicicleta");
 					}
 					break;
-				default:
-					view.printMessage("--------- Opcion Invalida ---------");
+				case "11": // Graficar?? SII
+					try {
+						view.printMessage("Generando archivo...");
+						modelo.maps();
+						view.printMessage("Archivo generado.");
+					} catch (Exception e) {
+						view.printMessage("Hubo un error.");
+						view.printMessage(e.getMessage());
+					}
 					break;
 			}
 		}
