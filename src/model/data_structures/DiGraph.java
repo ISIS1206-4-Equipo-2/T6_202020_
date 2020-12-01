@@ -233,6 +233,20 @@ public class DiGraph<K extends Comparable<K>, V> {
 		}
 		return list;
 	}
+	
+	public Vertex<K, V>[] verticesArray() 
+	{
+		Object array[] = vertices.valueSet();
+
+		Vertex<K, V>[] list = new Vertex[array.length];
+
+		int i = 0;
+		for (Object vertex : array) {
+			list[i] = (Vertex<K, V>) vertex;
+			i++;
+		}
+		return list;
+	}
 
 	/**
 	 * Asocia una posición a los vertices en la lista de vertices

@@ -9,6 +9,9 @@ public class Estacion {
     private Double latitud;
     private Double longitud;
     
+    private int cantidadViajesLlegada;
+    private int cantidadViajesSalida;
+    
     public Estacion(String pNombre, Double lat, Double lng)
     {
 		edadesCantidadEntrada = new int[7];
@@ -16,6 +19,8 @@ public class Estacion {
 		nombre=pNombre;
 		latitud = lat;
         longitud = lng;
+        cantidadViajesSalida = 0;
+        cantidadViajesLlegada = 0;
     }
     
 
@@ -54,7 +59,6 @@ public class Estacion {
 	{
 		if(edad >= 0 && edad <= 10)
 		{
-			
 			edadesCantidadSalida[0] = edadesCantidadSalida[0]+1;
 		}
 		else if(edad >= 11 && edad <= 20)
@@ -182,6 +186,26 @@ public class Estacion {
 		}
 		
 		return 0;
+	}
+	
+	public void aumentarViajesLlegada()
+	{
+		cantidadViajesLlegada = cantidadViajesLlegada +1;
+	}
+	
+	public void aumentarViajesSalida()
+	{
+		cantidadViajesSalida = cantidadViajesSalida +1;
+	}
+	
+	public int darViajesSalida()
+	{
+		return cantidadViajesSalida;
+	}
+	
+	public int darViajesLlegada()
+	{
+		return cantidadViajesLlegada;
 	}
 
 }

@@ -4,6 +4,7 @@ import java.util.LinkedList;
 import java.util.Scanner;
 import java.util.Stack;
 
+import model.data_structures.Vertex;
 import model.logic.Estacion;
 import model.logic.Modelo;
 import view.View;
@@ -121,17 +122,20 @@ public class Controller {
 						view.printMessage("----------------------------------");
 
 						int edad = Integer.parseInt(lector.nextLine());
-						Estacion[] masViajes = modelo.estacionConMasViajerosPorEdad(edad);
-
-						view.printMessage("Mas por salida: " + masViajes[0].darNombre() + " con " + " "
-								+ masViajes[0].cantidadEnRangoEdadS(edad) + " salidas.");
-						view.printMessage("Longitud: " + masViajes[0].darLongitud());
-						view.printMessage("Latitud: " + masViajes[0].darLatitud());
+						Vertex<Integer, Estacion>[] masViajes = modelo.estacionConMasViajerosPorEdad(edad);
+							
+						view.printMessage("Mas por salida: " + masViajes[0].getInfo().darNombre() + " con " + " "
+								+ masViajes[0].getInfo().cantidadEnRangoEdadS(edad) + " salidas.");
+						view.printMessage("Longitud: " + masViajes[0].getInfo().darLongitud());
+						view.printMessage("Latitud: " + masViajes[0].getInfo().darLatitud());
+						view.printMessage("ID: " + masViajes[0].getId());
 						view.printMessage("----------------------------------");
-						view.printMessage("Mas por entrada: " + masViajes[1].darNombre() + " con " + " "
-								+ masViajes[1].cantidadEnRangoEdadE(edad) + " entradas.");
-						view.printMessage("Longitud: " + masViajes[1].darLongitud());
-						view.printMessage("Latitud: " + masViajes[1].darLatitud());
+						view.printMessage("Mas por entrada: " + masViajes[1].getInfo().darNombre() + " con " + " "
+								+ masViajes[1].getInfo().cantidadEnRangoEdadE(edad) + " entradas.");
+						view.printMessage("Longitud: " + masViajes[1].getInfo().darLongitud());
+						view.printMessage("Latitud: " + masViajes[1].getInfo().darLatitud());
+						view.printMessage("ID: " + masViajes[1].getId());
+						modelo.losCaminosDeLaVida(masViajes[0], masViajes[1]);
 					} catch (Exception e) {
 						view.printMessage("Hubo un error.");
 						view.printMessage(e.getMessage());
