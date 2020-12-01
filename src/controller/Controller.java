@@ -142,7 +142,7 @@ public class Controller {
 					}
 					break;
 
-				case "9": // Graficar??
+				case "9": // Graficar?? SII
 					try {
 						view.printMessage("Generando archivo...");
 						modelo.maps();
@@ -222,7 +222,7 @@ public class Controller {
 					view.printMessage("Latitud: 40.71 grados y Longitud: -73.93 grados");
 					view.printMessage("----------------------------------------");
 					try {
-						view.printMessage("Ingrese las coordenadas iniciales en formato lat long:");
+						view.printMessage("Ingrese las coordenadas iniciales en formato lat long (ej: \"-12.5 15\"):");
 						String strGeo0 = lector.nextLine().trim();
 						String[] latLong = strGeo0.split(" ");
 						Double latitud0 = Double.parseDouble(latLong[0]);
@@ -231,9 +231,9 @@ public class Controller {
 							throw new Exception(); // Rango de latitudes
 						if (longitud0 < -180 || longitud0 > 180)
 							throw new Exception(); // Rango de longitudes
-						view.printMessage("Ingrese las coordenadas finales en formato lat-long:");
+						view.printMessage("Ingrese las coordenadas finales en formato lat-long (ej: \"-25 25.5\"):");
 						String strGeof = lector.nextLine().trim();
-						String[] latLongf = strGeof.split("-");
+						String[] latLongf = strGeof.split(" ");
 						Double latitudf = Double.parseDouble(latLongf[0]);
 						Double longitudf = Double.parseDouble(latLongf[1]);
 						if (latitudf < -90 || latitudf > 90)
@@ -249,15 +249,19 @@ public class Controller {
 						view.printMessage("\n---------------- RESUMEN  ------------------");
 						view.printMessage("Tiempo total: " + tiempoS + " segundos");
 						view.printMessage("Estaciones mas cercanas:");
-						view.printMessage("Inicio: " + ids[0]);
-						view.printMessage("Final : " + ids[1]);
+						view.printMessage("Inicio: "+ modelo.darVerticePorID(ids[0]).getInfo().darNombre() + " con la ID " + ids[0]);
+						view.printMessage("Final: "+ modelo.darVerticePorID(ids[1]).getInfo().darNombre() + " con la ID " + ids[1]);
+						
 						view.printMessage("El camino mas corto entre ambas estaciones es: ");
+						modelo.losCaminosDeLaVida(modelo.darVerticePorID(ids[0]), modelo.darVerticePorID(ids[1]));
 						// TODO Reportar respuesta
+						
 						view.printMessage("---------------------------------------------");
 					} catch (Exception e) {
 						view.printMessage("--------- Formato de geoposicionamiento invalido ---------");
 						view.printMessage(e.getMessage());
 						fin = true;
+						e.printStackTrace();
 					}
 					break;
 				default:

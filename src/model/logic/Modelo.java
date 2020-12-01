@@ -527,22 +527,31 @@ public class Modelo {
     {
     	Dijkstra<Integer, Estacion> djk = new Dijkstra(grafo, from);
     	
-    	System.out.println("Peso: "+ djk.distTo(to));
+    	//System.out.println("Peso: "+ djk.distTo(to));
     	
     	Stack<Edge<Integer, Estacion>> hola = djk.pathTo(to);
-    	System.out.println("Cantidad de recorridos: " + hola.size());
     	
-    	if(djk.distTo(to) != Double.POSITIVE_INFINITY && !(djk.distTo(to) == 0))
+    	
+    	if(hola != null && djk.distTo(to) != Double.POSITIVE_INFINITY && !(djk.distTo(to) == 0))
     	{
+    		System.out.println("Cantidad de recorridos: " + hola.size());
     		for (Edge<Integer, Estacion> edge : hola) 
         	{
     			System.out.println("\nDESDE " + edge.getSource().getInfo().darNombre() + " HASTA " + edge.getDest().getInfo().darNombre() );
     		}
     	}
-    	else if(djk.distTo(to) == 0)
-    		System.out.println("Es cero");
+    	else if(hola != null && djk.distTo(to) == 0)
+    	{
+    		System.out.println("Cantidad de recorridos: " + hola.size());
+    	}
+    		
     	else
     		System.out.println("Es infinito");    
+    }
+    
+    public Vertex<Integer,Estacion> darVerticePorID(Integer id)
+    {
+    	return grafo.getVertex(id);
     }
     
     
