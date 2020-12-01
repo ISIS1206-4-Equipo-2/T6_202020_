@@ -148,8 +148,6 @@ public class Modelo {
                 	nuevaBici.agregarEstacion(grafo.getVertex(iniID).getInfo());
                 	nuevaBici.agregarEstacion(grafo.getVertex(finID).getInfo()); 
                 	bicicletas.put(idBici, nuevaBici);
-                	System.out.println("BICI NUEVA");
-                	System.out.println(bicicletas.get(idBici).darTiempoUso());
             	}
             	else
             	{
